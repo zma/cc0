@@ -1,0 +1,55 @@
+cmake_minimum_required(VERSION 2.8)
+
+add_library(core Symbol/SymbolRef.cpp 
+Misc/TagContainer.cpp 
+Target/TargetProgram.cpp 
+Target/TargetInstruction.cpp 
+IL/ILFunction.cpp 
+IL/ILClass.cpp IL/ILProgram.cpp Pass/AssemblyParser.cpp Pass/CodeGenerator.cpp Pass/ILOptimizer.cpp Pass/SourceParser.cpp Pass/ILGenerator.cpp IL/ILVisitor.cpp IL/IL.cpp Analysis/UseInfo.cpp Analysis/DefInfo.cpp Analysis/BasicBlock.cpp CodeDom/InlineAssemblyExpression.cpp CodeDom/ArraySegmentExpression.cpp 
+    Binary/SectionInfo.cpp
+    Binary/BinaryWriter.cpp
+    Misc/ConstantValue.cpp
+    Symbol/SymbolAddressAllocator.cpp
+    Symbol/SymbolAddress.cpp
+    Symbol/SymbolScope.cpp
+    Symbol/Declaration.cpp
+    Symbol/Symbol.cpp
+    Misc/Location.cpp
+    Misc/CompilationContext.cpp
+    Type/VoidType.cpp
+    Type/FunctionType.cpp
+    Type/LabelType.cpp
+    Type/ArrayType.cpp
+    Type/StructType.cpp
+    Type/IntegerType.cpp
+    Type/FloatingPointType.cpp
+    Type/Type.cpp
+    Type/BooleanType.cpp
+    Type/PointerType.cpp
+    CodeDom/LoopExpression.cpp
+    CodeDom/LabelExpression.cpp
+    CodeDom/FunctionExpression.cpp
+    CodeDom/MemberExpression.cpp
+    CodeDom/ConditionalExpression.cpp
+    CodeDom/UnaryExpression.cpp
+    CodeDom/ReturnExpression.cpp
+    CodeDom/BlockExpression.cpp
+    CodeDom/AbortExpression.cpp
+    CodeDom/ConvertExpression.cpp
+    CodeDom/BinaryExpression.cpp
+    CodeDom/IndexExpression.cpp
+    CodeDom/ExpressionVisitor.cpp
+    CodeDom/Expression.cpp
+    CodeDom/VariableExpression.cpp
+    CodeDom/NewRunnerExpression.cpp
+    CodeDom/AssignExpression.cpp
+    CodeDom/NopExpression.cpp
+    CodeDom/ProgramExpression.cpp
+    CodeDom/GotoExpression.cpp
+    CodeDom/ConstantExpression.cpp
+    CodeDom/CommitExpression.cpp
+    CodeDom/ExpressionTreeDumper.cpp
+    CodeDom/CallExpression.cpp
+    Pass/ConstantPropagation.cpp
+    Pass/TypeDeduction.cpp
+)
