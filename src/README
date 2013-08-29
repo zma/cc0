@@ -1,0 +1,6 @@
+Needed package to build cc0:
+
+glibc-static
+libstdc++-static
+
+
