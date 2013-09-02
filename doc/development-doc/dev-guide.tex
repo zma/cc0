@@ -1,0 +1,97 @@
+\documentclass[10pt]{article}
+% \usepackage[a4paper]{geometry}
+\usepackage{fullpage}
+\usepackage{times}
+\usepackage{epsfig,endnotes}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amssymb,amsmath}
+\usepackage{color}
+\usepackage{comment}
+\usepackage{multirow}
+\usepackage{graphicx,subfigure}
+\usepackage{url}
+\usepackage{alltt}
+\usepackage{listings}
+\usepackage[normalem]{ulem}
+\lstset{basicstyle=\ttfamily\small, language=C, breaklines=true}
+
+\title{cc0 Development Guide}
+
+\author{
+}
+
+\date{\today}
+
+\begin{document}
+
+This document provide the guidance for development of cc0.
+
+\section{Building cc0}
+
+Please refer to
+
+http://baijia.info/showthread.php?tid=1342
+
+for how to build and install cc0. The content from the thread above may be gradually moved to this document.
+
+\section{Correctness checking}
+
+After changing cc0, the first task may be to check whether your changed and compiled cc0 is correct.
+
+First, make sure cc0 is in your PATH and you can directly invoke
+
+\begin{verbatim}
+$ cc0
+\end{verbatim}
+
+Then, go to the cc0 git repository, and execute:
+
+\begin{verbatim}
+$ cd src/correctness
+$ make test
+\end{verbatim}
+
+If each line indicate ``...[OK]'' as follows, your compiled cc0 is correct.
+
+\begin{verbatim}
+-------------------------------
+[Tue Jul 16 17:31:41 HKT 2013] 
+aborts-activating-depending-tasks.c [OK]
+array.c [OK]
+asm.c [OK]
+break-continue.c [OK]
+depending-tasks-across-spaces.c [OK]
+double-array.c [OK]
+double-division.c [OK]
+i0.c [OK]
+input_q.c [OK]
+newr.c [OK]
+null.c [OK]
+null-runner.c [OK]
+ppm-i.c [OK]
+ppm-r.c [OK]
+ppm-w.c [OK]
+pralloc_writer_reader.c [OK]
+runner-in.c [OK]
+shalloc_auto_init.c [OK]
+shalloc_writer_reader.c [OK]
+sio.c [OK]
+spawnx.c [OK]
+stdio.c [OK]
+usleep.c [OK]
+watch-aborted-exit-code.c [OK]
+watch-exit-code.c [OK]
+watch-failed-to-commit-exit-code.c [OK]
+write-exit-code.c [OK]
+[Tue Jul 16 17:31:42 HKT 2013] 
+All test done.
+------------------------------------
+\end{verbatim}
+
+\maketitle
+
+
+
+\end{document}
+
