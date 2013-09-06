@@ -82,7 +82,11 @@ int main(int argc, char **argv)
     {
         if(strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0)
         {
-            CompilationContext::GetInstance()->OutputFile = argv[++i];
+			if (argv[i + 1] != NULL && *argv[i + 1] != '-') {
+            	CompilationContext::GetInstance()->OutputFile = argv[++i];
+			} else {
+				CompilationContext::GetInstance()->OutputFile = "a.bin";
+			}
         }
         else if( (strcmp(argv[i], "--debug") == 0) || (strcmp(argv[i], "-g") == 0) )
         {
@@ -122,9 +126,7 @@ int main(int argc, char **argv)
 
     ILProgram *il = NULL;
 
-
     std::vector<std::string> &inputFiles = CompilationContext::GetInstance()->InputFiles;
-
     
     if(inputFiles.size() == 0)
     {
