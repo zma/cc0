@@ -37,6 +37,7 @@ void CSourceParser::Parse(std::string fileName)
         std::cout << "Calling altlr3CommonTokenStreamSourceNew..." << std::endl;
 
     ANTLR3_COMMON_TOKEN_STREAM  *tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lxr));
+
     if (tstream == NULL)
     {
         ANTLR3_FPRINTF(stderr, "Out of memory trying to allocate token stream\n");

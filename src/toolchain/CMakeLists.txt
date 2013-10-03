@@ -6,8 +6,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake.d/
 
 ## Compiler flags
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "-static -static-libstdc++ -static-libgcc")        ## Optimize
-    set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary
+    set(CMAKE_CXX_FLAGS "-g -static -static-libstdc++ -static-libgcc")        ## Optimize
+    # set(CMAKE_CXX_FLAGS "-g")
+    # set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary
+    set(CMAKE_EXE_LINKER_FLAGS "")  ## Strip binary
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR})
