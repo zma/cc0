@@ -159,16 +159,34 @@ int main(int argc, char **argv)
             {
                return -1; 
             }
-            
+ 
+            if(CompilationContext::GetInstance()->Debug)
+            {
+                printf("--------------------------------------\n");
+                printf("parsing...\n");
+            }
+
             CSourceParser *frontend = new CSourceParser();
             frontend->Parse(tmpFileName);
 
             // Note: leave tmpFile for user to check
             // remove(tmpFileName);
-            
+  
+            if(CompilationContext::GetInstance()->Debug)
+            {
+                printf("--------------------------------------\n");
+                printf("ConstantPropagation...\n");
+            }
+           
             ConstantPropagation *constantPropagation = new ConstantPropagation();
             context->CodeDom->Accept(constantPropagation);
-            
+  
+            if(CompilationContext::GetInstance()->Debug)
+            {
+                printf("--------------------------------------\n");
+                printf("ConstantPropagation...\n");
+            }
+             
             TypeDeduction *typeDeduction = new TypeDeduction();
             context->CodeDom->Accept(typeDeduction);
 
