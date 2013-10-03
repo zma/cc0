@@ -17,6 +17,7 @@ CSourceParser::~CSourceParser()
 
 void CSourceParser::Parse(std::string fileName)
 {
+
     ANTLR3_UINT8 *fName = (pANTLR3_UINT8)fileName.c_str();
     
     ANTLR3_INPUT_STREAM  *input  = antlr3FileStreamNew(fName, ANTLR3_ENC_UTF8);
@@ -32,6 +33,9 @@ void CSourceParser::Parse(std::string fileName)
         exit(ANTLR3_ERR_NOMEM);
     }
 
+    if(CompilationContext::GetInstance()->Debug)
+        std::cout << "Calling altlr3CommonTokenStreamSourceNew..." << std::endl;
+
     ANTLR3_COMMON_TOKEN_STREAM  *tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lxr));
     if (tstream == NULL)
     {
@@ -39,12 +43,26 @@ void CSourceParser::Parse(std::string fileName)
         exit(ANTLR3_ERR_NOMEM);
     }
 
+    if(CompilationContext::GetInstance()->Debug)
+        std::cout << "Called altlr3CommonTokenStreamSourceNew..." << std::endl;
+
     CParser *psr = CParserNew(tstream);
+
     CompilationContext::GetInstance()->CurrentParser = psr->pParser;
-    
+ 
+    if(CompilationContext::GetInstance()->Debug)
+    {
+        printf("Parse: calling translation_unit...\n");
+    }
+   
     CompilationContext::GetInstance()->CodeDom = psr->translation_unit(psr);
 
     CompilationContext::GetInstance()->CurrentParser = NULL;
+
+    if(CompilationContext::GetInstance()->Debug)
+    {
+        printf("Parse: cleanup\n");
+    }
 
 
     psr     ->free(psr);
@@ -55,6 +73,12 @@ void CSourceParser::Parse(std::string fileName)
     lxr     = NULL;
     input   ->close(input);
     input   = NULL;
+
+    if(CompilationContext::GetInstance()->Debug)
+    {
+        printf("finished Parse\n");
+    }
+
 }
 
 
