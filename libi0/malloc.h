@@ -299,6 +299,7 @@ void* shalloc(long size)
 #ifdef _DEBUG_MLC_
     output_q_hex(align_size);
     output_q_hex(*(long*) PR_IS_USED);
+    *(long*) STDOUT = 10;
     *(long*) STDOUT = 'K';
     *(long*) STDOUT = 10;
 #endif
@@ -395,6 +396,7 @@ void *pralloc(long size)
 #ifdef _DEBUG_MLC_
     _output_debug(align_size);
     _output_debug(*(long*) PR_IS_USED);
+    *(long*) STDOUT = 10;
     *(long*) STDOUT = 'K';
     *(long*) STDOUT = 10;
 #endif
