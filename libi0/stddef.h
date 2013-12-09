@@ -163,7 +163,7 @@
 #define L0_SPACE11         (0x2C00000000000)
 #define L0_SPACE12         (0x3000000000000)
 
-#define L0_SPACE_INC        (0x100000000000)
+#define L0_SPACE_INC        (0x400000000000)
 
 // exit code
 #define NEW_RUNNER_ID_ADDR (0x100000410)
