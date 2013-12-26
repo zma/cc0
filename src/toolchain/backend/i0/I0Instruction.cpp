@@ -1,4 +1,6 @@
 #include "I0Instruction.h"
+#include <iostream>
+#include <iomanip>
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -335,15 +337,24 @@ char* I0Instruction::EncodeOperandData(char* buffer, I0Instruction::I0Operand op
 void I0Instruction::Encode(char* buffer)
 {
     char *p = buffer;
+    char _p = '\0';
 
     *p = (char)((AddrSizePrefix << 7) & 0x80); // bit 0
-    *p++ = *p | ((OpCode >> 3) & 0x7F); // bit 1 - 7
-    *p = (OpCode & 0x7) << 5; // bit 8 - 10
+    _p = *p;
+    *p++ = (int)_p | ((OpCode >> 3) & 0x7F); // bit 1 - 7
+
+    // std::cout << "OpCode: 1st " << OpCode << " -> " << std::hex << (int)(*(p-1)) << std::endl;
+
+    *p = (char)(((OpCode & 0x7) << 5) & 0xF0); // bit 8 - 10
+
+    // std::cout << " ==> 2nd " << std::hex << (int)(*p) << std::endl;
 
     switch(OpCode)
     {
         case CONV:
-            *p++ = *p | (Operands[0].ConvAttribute << 1) | (Operands[1].ConvAttribute >> 3);
+            _p = *p;
+            // *p++ = (int)*p | (Operands[0].ConvAttribute << 1) | (Operands[1].ConvAttribute >> 3);
+            *p++ = _p | (Operands[0].ConvAttribute << 1) | (Operands[1].ConvAttribute >> 3);
             *p++ = (Operands[1].ConvAttribute << 5) | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
             *p++ = Operands[1].AddressingMode << 7;
             p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
@@ -356,29 +367,51 @@ void I0Instruction::Encode(char* buffer)
         case AND:
         case OR:
         case XOR:
-            *p++ = *p | (Attribute << 1) | (Operands[0].AddressingMode >> 2);
+            // std::cout << " ==> " << OpCode << " -> " << std::hex << (int)(*p) << std::endl;
+            // std::cout << " ==> Attribute << 1 " << " -> " << std::hex << (Attribute << 1) << std::endl;
+            // std::cout << " ==> Operands[0].AddressingMode >> 2 " << " -> " << (Operands[0].AddressingMode >> 2) << std::endl;
+
+            _p = *p;
+
+            // std::cout << " ==> _p " << OpCode << " -> " << std::hex << (int)_p << std::endl;
+
+            // bug caused here on g++ 4.8.2
+            // *p++ = (char)((int)(*p) | (Attribute << 1) | (Operands[0].AddressingMode >> 2));
+            *p++ = (char)((int)(_p) | (Attribute << 1) | (Operands[0].AddressingMode >> 2));
+
+            // std::cout << " ==> " << OpCode << " -> " << std::hex << (int)(*(p-1)) << std::endl;
+
             *p++ = (Operands[0].AddressingMode << 6) | (Operands[1].AddressingMode << 3) | (Operands[2].AddressingMode);
             p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
             p = EncodeOperandData(p, Operands[1], AddrSizePrefix);
             p = EncodeOperandData(p, Operands[2], AddrSizePrefix);
             break;
         case B:
-            *p = *p | (JumpMode << 1);
+            _p = *p;
+
+            // *p = *p | (JumpMode << 1);
+            *p = (char)((int)_p | (JumpMode << 1));
 
             if(JumpMode == J)
             {
-                *p++ = *p | (RelativeJump ? 1 : 0);
+                _p = *p;
+                // *p++ = *p | (RelativeJump ? 1 : 0);
+                *p++ = (char)((int)_p | (RelativeJump ? 1 : 0));
                 p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
             }
             else if(JumpMode == JI)
             {
-                *p++ = *p | (Operands[0].AddressingMode >> 2);
+                _p = *p;
+                // *p++ = *p | (Operands[0].AddressingMode >> 2);
+                *p++ = (char)((int)_p | (Operands[0].AddressingMode >> 2));
                 *p++ = Operands[0].AddressingMode << 6;
                 p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
             }
             else if(JumpMode == NE || JumpMode == E || JumpMode == L || JumpMode == LE || JumpMode == SL)
             {
-                *p++ = *p | (Attribute >> 3);
+                _p = *p;
+                // *p++ = *p | (Attribute >> 3);
+                *p++ = (char)((int)_p | (Attribute >> 3));
                 *p++ = (Attribute << 5) | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
                 *p++ = (Operands[1].AddressingMode << 7) | ((RelativeJump ? 1 : 0) << 6);
                 p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
@@ -387,7 +420,8 @@ void I0Instruction::Encode(char* buffer)
             }
             else if(JumpMode == NZ || JumpMode == Z)
             {
-                *p++ = *p | (Attribute >> 3);
+                _p = *p;
+                *p++ = _p | (Attribute >> 3);
                 *p++ = (Attribute << 5) | (Operands[0].AddressingMode << 2) | ((RelativeJump ? 1 : 0) << 1);
                 p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
                 p = EncodeOperandData(p, Operands[1], AddrSizePrefix);
@@ -399,7 +433,8 @@ void I0Instruction::Encode(char* buffer)
 
             break;
         case SPAWN:
-            *p++ = *p | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
+            _p = *p;
+            *p++ = _p | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
             *p++ = (Operands[2].AddressingMode << 7) | (Operands[2].AddressingMode << 4) | (Operands[3].AddressingMode << 1);
             p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
             p = EncodeOperandData(p, Operands[1], AddrSizePrefix);
@@ -408,7 +443,8 @@ void I0Instruction::Encode(char* buffer)
             break;
         case SPAWNX:
             // TODO: debug here
-            *p++ = *p | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
+            _p = *p;
+            *p++ = _p | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
             *p++ = (Operands[2].AddressingMode << 7) | (Operands[2].AddressingMode << 4) | (Operands[3].AddressingMode << 1) | (Operands[4].AddressingMode >> 2);
             *p++ = Operands[4].AddressingMode << 6;
             p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
@@ -419,7 +455,8 @@ void I0Instruction::Encode(char* buffer)
             break;
 
         case EXIT:
-            *p++ = *p | (ExitMode << 3);
+            _p = *p;
+            *p++ = _p | (ExitMode << 3);
             break;
         case NOP:
             p++;
@@ -429,7 +466,8 @@ void I0Instruction::Encode(char* buffer)
             *p++ = (Operands[0].IntValue & 0xFF);
             break;
         case SCMP:
-            *p++ = *p | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
+            _p = *p;
+            *p++ = _p | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
             *p++ = (Operands[1].AddressingMode << 7) | (Operands[2].AddressingMode << 4) | (Operands[3].AddressingMode << 1) | (Operands[4].AddressingMode >> 2);
             *p++ = (Operands[4].AddressingMode << 6);
             p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
