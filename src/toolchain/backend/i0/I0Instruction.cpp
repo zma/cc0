@@ -339,6 +339,15 @@ void I0Instruction::Encode(char* buffer)
     char *p = buffer;
     char _p = '\0';
 
+    // bug caused here on g++ 4.8.2
+    // In the cc0 source code, there are places uses char *p like this:
+    // p++ = p | 0x1;
+    // The sequence of operations (p++, and *p) is ambiguous. Check a discussion at: http://pic.dhe.ibm.com/infocenter/tpfhelp/current/index.jsp?topic=%2Fcom.ibm.ztpf-ztpfdf.doc_put.cur%2Fcommon%2Fm1rhoseq.html and also http://en.cppreference.com/w/cpp/language/eval_order .
+    // To fix it, I changed code above to:
+    // char _p = *p;
+    // *p++ = _p | 0x1;
+    // to force (*p) to be evaluated first.
+
     *p = (char)((AddrSizePrefix << 7) & 0x80); // bit 0
     _p = *p;
     *p++ = (int)_p | ((OpCode >> 3) & 0x7F); // bit 1 - 7
