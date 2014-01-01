@@ -10,6 +10,11 @@
 #define C_CR (13)
 #define C_t (9)
 
+// End of file character.
+#ifndef EOF                                                             
+# define EOF (-1)                                                       
+#endif
+
 // print a char to STDOUT
 void output_char(long c)
 {
