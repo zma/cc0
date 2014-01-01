@@ -226,6 +226,7 @@ long input_q()
     // try to get -
     do {
         c = __input_char();
+        if (c == EOF) goto input_q_exit;
         if (c == (long)'-') {
             c = __input_char();
             if (c <= (long)'9') {
@@ -247,6 +248,7 @@ long input_q()
         n = n * 10 + (long)c - (long)'0'; 
         // read next char
         c = __input_char();
+        if (c == EOF) goto input_q_exit;
         if (c > (long)'9') {
             is_checking = 0;
         }
@@ -259,6 +261,7 @@ long input_q()
         n = 0 - n;
     }
 
+input_q_exit:
     return n;
 }
 
