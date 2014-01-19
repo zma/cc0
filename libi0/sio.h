@@ -9,14 +9,15 @@
 #define sid_t uint64_t
 #define sizeof_sid_t 8
 
-// *n is the number of bytes received, 
+// returned value is the number of bytes received, 
 // or -1 if an error occurred. 
-// The return value will be 0 when the peer  has  performed  an  orderly
+// The return value will be 0 when the peer  has  performed an orderly
 // shutdown.
 
-// sleep for us useconds
-void sread(sid_t sid, size_t nbyte, void **addr, size_t *n)
+size_t sread(sid_t sid, size_t nbyte, char *addr)
 {
+    uint64_t n;
+
     // set system call id
     *(SYSCALL_ID_TYPE*) SYSCALL_ID_ADDR = (SYSCALL_ID_TYPE) SYSCALL_ID_SREAD;
 
@@ -26,14 +27,17 @@ void sread(sid_t sid, size_t nbyte, void **addr, size_t *n)
     // set system call input arguments
     *(size_t*) (SYSCALL_COMM_AREA_ADDR + sizeof_sid_t) = nbyte;
 
+    // set system call input arguments
+    *(char**) (SYSCALL_COMM_AREA_ADDR + 2 * sizeof_sid_t) = addr;
+
     // issue system call
     asm("int 0x80");
 
     // set return value
 
-    *n = *(size_t*) (SYSCALL_COMM_AREA_ADDR);
+    n = *(size_t*) (SYSCALL_COMM_AREA_ADDR);
 
-    *addr = *(void**) (SYSCALL_COMM_AREA_ADDR + sizeof_size_t);
+    // *addr = *(void**) (SYSCALL_COMM_AREA_ADDR + sizeof_size_t);
 
 #ifdef _SIO_DEBUG_
     output_char('s');
@@ -44,13 +48,13 @@ void sread(sid_t sid, size_t nbyte, void **addr, size_t *n)
     output_char('r');
     output_char(':');
     output_char(C_n);
-    output_q(*n);
+    output_q(n);
     output_char(C_n);
-    output_char_str((char*)*addr, *n);
+    output_char_str((char*)addr, n);
     output_char(C_n);
 #endif
 
-    return;
+    return n;
 }
 
 size_t swrite(sid_t sid, char *addr, size_t nbyte)
