@@ -14,7 +14,7 @@
 // The return value will be 0 when the peer  has  performed an orderly
 // shutdown.
 
-size_t sread(sid_t sid, size_t nbyte, char *addr)
+size_t sread(sid_t sid, char *addr, size_t nbyte)
 {
     uint64_t n;
 
