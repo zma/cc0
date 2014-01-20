@@ -23,12 +23,22 @@ void output_char(long c)
 }
 
 #define putchar(c) output_char(c)
+#define put1(c) putchar(c)
+#define put2(a,b) {put1(a); put1(b);}
+#define put4(a,b,c,d) {put2(a,b); put2(c,d);}
+#define put8(a,b,c,d,e,f,g,h) {put4(a,b,c,d); put4(e,f,g,h);}
+#define writeln6(a,b,c,d,e,f) {put4(a,b,c,d); put2(e,f); put1(C_n);}
+#define writelns6(a) {writeln6(a[0],a[1],a[2],a[3],a[4],a[5]);}
+#define writeln3(a,b,c) {put2(a,b); put2(c, C_n);}
+#define writelns4(a) {put4(a[0], a[1], a[2], a[3]); put1(C_n);}
 
 void _output_q(long n)
 {
     *(long*)0x100000208 = n;
     return;
 }
+
+#define putq(a) output_q(a)
 
 // print a 64bit integer to STDOUT
 void output_q(long n)
@@ -197,6 +207,8 @@ output_str_j1:
 //     output_char(C_n);
 //     return q;
 // }
+
+#define getc1 input_char
 
 // input a char from STDIN
 char input_char()
