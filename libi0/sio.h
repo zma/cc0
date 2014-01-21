@@ -31,9 +31,13 @@ size_t sread(sid_t sid, char *addr, size_t nbyte)
     *(char**) (SYSCALL_COMM_AREA_ADDR + 2 * sizeof_sid_t) = addr;
 
     // make sure all data are accessible
+    // each page
     for (n = 0; n < nbyte; n = n + N_CHAR_PER_PAGE) {
+    // for (n = 0; n < nbyte; n = n + 1) {
         addr[n] = '.';
     }
+    // last page
+    addr[nbyte - 1] = '.';
 
     // issue system call
     asm("int 0x80");
@@ -96,10 +100,14 @@ size_t swrite(sid_t sid, char *addr, size_t nbyte)
 #endif
 
     // make sure all data are accessible
+    // each page
     for (n = 0; n < nbyte; n = n + N_CHAR_PER_PAGE) {
     // for (n = 0; n < nbyte; n = n + 1) {
         c = addr[n];
     }
+    // last page
+    c = addr[nbyte - 1];
+
     n = 0;
 
     // issue system call
