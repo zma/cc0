@@ -14,7 +14,7 @@
  *
  * Note: different VPCs possibly have different start point.
  */
-long gettime(time_t &tv_sec, long &tv_nsec)
+long gettime(time_t *tv_sec, long *tv_nsec)
 {
     long ret;
 
@@ -27,11 +27,11 @@ long gettime(time_t &tv_sec, long &tv_nsec)
     asm("int 0x80");
 
     // get output value of system call
-    ret = *(long*) (SYSCALL_COMM_AREA_ADDR);
-    tv_sec = *(time_t*) (SYSCALL_COMM_AREA_ADDR + sizeof_long);
-    tv_nsec *(long*) (SYSCALL_COMM_AREA_ADDR + sizeof_long + sizeof_time_t);
+    ret = *(long*) ((long)SYSCALL_COMM_AREA_ADDR);
+    *tv_sec = *(time_t*) ((long)SYSCALL_COMM_AREA_ADDR + sizeof_long);
+    *tv_nsec = *(long*) ((long)SYSCALL_COMM_AREA_ADDR + sizeof_long + sizeof_time_t);
 
     return ret;
 }
-
+ 
 #endif // TIME_H
