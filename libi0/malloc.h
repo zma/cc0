@@ -7,11 +7,6 @@
 //remove following comment to get some debug output.
 // #define _DEBUG_MLC_
 
-// system call
-#define SYSCALL_ID_ADDR (0x100000420)
-#define SYSCALL_COMM_AREA_ADDR (0x100001000)
-#define SYSCALL_COMM_AREA_LEN (0x1000)
-
 //flag that whether shalloc area has been used. 
 //It is in auto init area. Its init value is 0.
 #define PR_IS_USED (0x200100000)

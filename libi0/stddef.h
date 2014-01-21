@@ -8,7 +8,6 @@
 #define N_LONG_PER_PAGE 1024
 #define N_CHAR_PER_PAGE 4096
 
-
 // sizes
 #define size_t int64_t
 #define sizeof_size_t 8
@@ -141,7 +140,10 @@
 // syscall ID
 #define SYSCALL_ID_MALLOC  (1)
 #define SYSCALL_ID_MALLOC_EXT  (6)
+
 #define SYSCALL_ID_USLEEP  (2)
+#define SYSCALL_ID_GETTIME (7)
+
 // streaming I/O
 #define SYSCALL_ID_SREAD   (3)
 #define SYSCALL_ID_SWRITE  (4)
