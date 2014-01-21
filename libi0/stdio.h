@@ -32,12 +32,6 @@ void output_char(long c)
 #define writeln3(a,b,c) {put2(a,b); put2(c, C_n);}
 #define writelns4(a) {put4(a[0], a[1], a[2], a[3]); put1(C_n);}
 
-void _output_q(long n)
-{
-    *(long*)0x100000208 = n;
-    return;
-}
-
 #define putq(a) output_q(a)
 
 // print a 64bit integer to STDOUT
@@ -82,6 +76,51 @@ output_q_j2:
     return;
 }
 
+// print a 64bit integer of at least d digits (filled 0s for padding) 
+// to STDOUT
+void output_q_digits(long n, long d)
+{
+    long num;
+    long c;
+    long num2;
+    long count;
+
+    num = n;
+    if (n < 0) {
+       num = 0 - n;
+       output_char((long)'-');
+    }
+
+    num2 = 0;
+
+    count = 0;
+    while (num > 0) {
+        c = num - (num / 10)*10;
+        num = num / 10;
+        num2 = num2 * 10;
+        num2 = num2 + c;
+        count = count + 1;
+    }
+
+    num = 0;
+
+    while (num + count < d) {
+        output_char('0');
+        num = num + 1;
+    }
+
+    num = 0;
+    while (num < count) {
+        // output num by byte
+        c = num2 - (num2 / 10)*10;
+        num2 = num2 / 10;
+        c = c + 48;
+        output_char((long)c);
+        num = num + 1;
+    }
+
+    return;
+}
 
 // print a 64bit integer in hexdecimal format to STDOUT
 // Note: only print 15 bits

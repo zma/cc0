@@ -1,9 +1,12 @@
 #ifndef TIME_H
 #define TIME_H
 
+#define no_DEBUG_TIME_H_
 
 #include "stdint.h"
 #include "stddef.h"
+
+#include "stdio.h"
 
 #define time_t long
 #define sizeof_time_t sizeof_long
@@ -33,5 +36,74 @@ long gettime(time_t *tv_sec, long *tv_nsec)
 
     return ret;
 }
- 
+
+/*
+ * substract time tv_sec, tv_nsec from  @tv_sec_from, @tv_nsec_from
+ */
+void time_subtract(time_t *tv_sec_from, long *tv_nsec_from,
+        time_t tv_sec, long tv_nsec)
+{
+    if (*tv_nsec_from < tv_nsec) {
+        *tv_sec_from = *tv_sec_from - 1;
+        *tv_nsec_from = *tv_nsec_from + 1000000000L;
+    }
+
+    *tv_sec_from = *tv_sec_from - tv_sec;
+    *tv_nsec_from = *tv_nsec_from - tv_nsec;
+
+    return;
+}
+
+/*
+ * get current time; calculate the time difference; and update the
+ * time by @tv_sec and @tv_nsec.
+ *
+ * return 0 on success. -1 on error.
+ */
+long print_time_diff_and_update(time_t *base_sec, long *base_nsec)
+{
+    time_t sec;
+    long nsec;
+    time_t tsec;
+    long tnsec;
+    long rt;
+
+#ifdef _DEBUG_TIME_H_
+    put4('d','p','1',C_n);
+#endif
+
+    // get current time
+    rt = gettime(&sec, &nsec);
+
+#ifdef _DEBUG_TIME_H_
+    put4('d','p','2',C_n);
+#endif
+
+    tsec = sec;
+    tnsec = nsec;
+
+    if (rt == 0) {
+
+#ifdef _DEBUG_TIME_H_
+        put4('d','p','3',C_n);
+#endif
+
+        time_subtract(&tsec, &tnsec, *base_sec, *base_nsec);
+
+        // update base
+        *base_sec = sec;
+        *base_nsec = nsec;
+
+        // print tsec, tnsec
+        output_q(tsec);
+        putchar('.');
+        output_q_digits(tnsec, 9);
+    } else {
+        put4('E', 'R', 'R', C_n);
+        return rt;
+    }
+
+    return 0;
+}
+
 #endif // TIME_H
