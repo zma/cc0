@@ -4,6 +4,14 @@
 
 #include "stdint.h"
 
+// registers only supports 4 yet
+
+register long reg1;
+register long reg2;
+register long reg3;
+register long reg4;
+
+
 // system confgiruation
 #define N_LONG_PER_PAGE 1024
 #define N_CHAR_PER_PAGE 4096

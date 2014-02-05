@@ -1,6 +1,8 @@
 #ifndef I0STRING_H
 #define I0STRING_H
 
+#include "stddef.h"
+
 // NOTE: n must be 8*N
 // better strncmp function
 // TODO: use register to optimize
@@ -152,6 +154,24 @@ void memcpy(char* src, long len, char* dst)
  
     return;
 }
+
+// memcmp with side effect: registers are changed
+// faster but need to save the registers by the program
+long memcmp_se(char* s1, char* s2, long n)
+{
+    long ret_value;
+
+    reg1 = (long)s1;
+    reg2 = (long)s2;
+    reg3 = n;
+
+    asm("strcmp reg1, reg3, reg2, reg3, reg4");
+
+    ret_value = reg4;
+
+    return ret_value;
+}
+
 
 // Note: use asm strcmp to optimize
 long memcmp(char* s1, char* s2, long n)
