@@ -185,31 +185,32 @@ long __memcmp_se(char* s1, char* s2, long n)
 long memcmp(char* s1, char* s2, long n)
 {
     long ret_value;
-    long n1;
-    n1 = 0;
-    ret_value = 0;
 
-memcmp_j1:
-    if (n1 == n) {
-        ret_value = 0;
-        goto memcmp_out;
-    }
+    long sr1;
+    long sr2;
+    long sr3;
+    long sr4;
 
-    if ((long)s1[n1] > (long)s2[n1]) {
-        ret_value = 1;
-        goto memcmp_out;
-    }
-    
-    if ((long)s1[n1] < (long)s2[n1]) {
-        ret_value = -1;
-        goto memcmp_out;
-    }
+    // save registers
+    sr1 = reg1;
+    sr2 = reg2;
+    sr3 = reg3;
+    sr4 = reg4;
 
-    n1 = n1 + 1;
+    reg1 = (long)s1;
+    reg2 = (long)s2;
+    reg3 = n;
 
-    goto memcmp_j1;
+    asm("strcmp reg1, reg3, reg2, reg3, reg4");
 
-memcmp_out:
+    ret_value = reg4;
+
+    // restore registers
+    reg1 = sr1;
+    reg2 = sr2;
+    reg3 = sr3;
+    reg4 = sr4;
+
     return ret_value;
 }
 
