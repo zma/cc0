@@ -9,6 +9,10 @@
 #define sid_t uint64_t
 #define sizeof_sid_t 8
 
+// an invalid sid_t
+// Note: should be consistent with the underlying syscall handler
+#define SID_INVALID 0
+
 // returned value is the number of bytes received, 
 // or -1 if an error occurred. 
 // The return value will be 0 when the peer  has  performed an orderly
@@ -134,7 +138,9 @@ size_t swrite(sid_t sid, char *addr, size_t nbyte)
 
     return n;
 }
- 
+
+// on success, return the sid
+// on failure, return SID_INVALID
 sid_t slisten(size_t port)
 {
     sid_t sid;
