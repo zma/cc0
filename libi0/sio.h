@@ -13,11 +13,11 @@
 // Note: should be consistent with the underlying syscall handler
 #define SID_INVALID 0
 
-// returned value is the number of bytes received, 
-// or -1 if an error occurred. 
-// The return value will be 0 when the peer  has  performed an orderly
-// shutdown.
-
+// Read at most @nbyte from @sid to @addr.
+// Returned value is:
+// the number of bytes received,
+// or -1 if an error occurred,
+// or 0 when the peer has performed an orderly shutdown.
 size_t sread(sid_t sid, char *addr, size_t nbyte)
 {
     uint64_t n;
@@ -70,6 +70,9 @@ size_t sread(sid_t sid, char *addr, size_t nbyte)
     return n;
 }
 
+// Write at most @nbyte from @addr to @sid.
+// Returned value is:
+// the number of bytes written.
 size_t swrite(sid_t sid, char *addr, size_t nbyte)
 {
     long n;
@@ -139,8 +142,9 @@ size_t swrite(sid_t sid, char *addr, size_t nbyte)
     return n;
 }
 
-// on success, return the sid
-// on failure, return SID_INVALID
+// Listen on port @port
+// On success, return the sid
+// On failure, return SID_INVALID
 sid_t slisten(size_t port)
 {
     sid_t sid;
