@@ -3,4 +3,5 @@ Needed package to build cc0:
 glibc-static
 libstdc++-static
 
-
+How to compile
+sudo privilege to run install_cc0.sh
