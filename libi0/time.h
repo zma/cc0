@@ -133,8 +133,6 @@ long get_time_diff_and_update(time_t *base_sec, long *base_nsec)
 {
     time_t sec;
     long nsec;
-    time_t tsec;
-    long tnsec;
     long rt;
 
 #ifdef _DEBUG_TIME_H_
@@ -166,6 +164,5 @@ long get_time_diff_and_update(time_t *base_sec, long *base_nsec)
 
     return 0;
 }
-
 
 #endif // TIME_H
