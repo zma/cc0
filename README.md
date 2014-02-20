@@ -19,8 +19,8 @@ A forum is set up for cc0/libi0-related discussions: [http://www.baijia.info/for
 cc0 is designed and implemented in the [ECSA](http://www.cse.ust.hk/~lingu/ecsa/) group directed by [Prof. Lin Gu](http://www.cse.ust.hk/~lingu/). This project is contributed by a group of people.
 
 * Xiang Gao. Implemented the first version of cc0 to compile c0 code to [DISA](http://www.zhiqiangma.com/homepage/publication/dvm-tc-draft.pdf).
-* [Zhiqiang Ma](http://www.zhiqiangma.com/homepage/). Implemented libi0. Implemented the new backend for generating i0 code. Implemented the IL optimization layer. Maintaining the c0 and libi0.
-* Lin Gu
+* [Eric Zhiqiang Ma](http://www.ericzma.com/homepage/). Implemented libi0. Implemented the new backend for generating i0 code. Implemented the IL optimization layer. Maintaining the c0 and libi0.
+* Lin Gu. Directed the design and development of c0/cc0.
 * Weiwei Jian
 * An incomplete list of contributors can be found on [github](https://github.com/zma/cc0/graphs/contributors).
 

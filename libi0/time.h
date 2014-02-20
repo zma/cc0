@@ -53,6 +53,23 @@ void time_subtract(time_t *tv_sec_from, long *tv_nsec_from,
 
     return;
 }
+/*
+ * add time tv_sec, tv_nsec to  @tv_sec_to, @tv_nsec_to
+ */
+void time_add(time_t *tv_sec_to, long *tv_nsec_to,
+        time_t tv_sec, long tv_nsec)
+{
+    *tv_sec_to = *tv_nsec_to + tv_sec;
+    *tv_nsec_to = *tv_nsec_to + tv_nsec;
+
+    if (*tv_nsec_to > 1000000000L) {
+        *tv_nsec_to = *tv_nsec_to - 1000000000L;
+        *tv_sec_to = *tv_sec_to + 1;
+    }
+
+    return;
+}
+
 
 /*
  * get current time; calculate the time difference; and update the
@@ -105,5 +122,50 @@ long print_time_diff_and_update(time_t *base_sec, long *base_nsec)
 
     return 0;
 }
+
+/*
+ * get current time; calculate the time difference; and update the
+ * time by @tv_sec and @tv_nsec with the difference.
+ *
+ * return 0 on success. -1 on error.
+ */
+long get_time_diff_and_update(time_t *base_sec, long *base_nsec)
+{
+    time_t sec;
+    long nsec;
+    time_t tsec;
+    long tnsec;
+    long rt;
+
+#ifdef _DEBUG_TIME_H_
+    put4('d','p','1',C_n);
+#endif
+
+    // get current time
+    rt = gettime(&sec, &nsec);
+
+#ifdef _DEBUG_TIME_H_
+    put4('d','p','2',C_n);
+#endif
+
+    if (rt == 0) {
+
+#ifdef _DEBUG_TIME_H_
+        put4('d','p','3',C_n);
+#endif
+
+        time_subtract(&sec, &nsec, *base_sec, *base_nsec);
+
+        // update base
+        *base_sec = sec;
+        *base_nsec = nsec;
+    } else {
+        put4('E', 'R', 'R', C_n);
+        return rt;
+    }
+
+    return 0;
+}
+
 
 #endif // TIME_H
