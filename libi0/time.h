@@ -59,7 +59,7 @@ void time_subtract(time_t *tv_sec_from, long *tv_nsec_from,
 void time_add(time_t *tv_sec_to, long *tv_nsec_to,
         time_t tv_sec, long tv_nsec)
 {
-    *tv_sec_to = *tv_nsec_to + tv_sec;
+    *tv_sec_to = *tv_sec_to + tv_sec;
     *tv_nsec_to = *tv_nsec_to + tv_nsec;
 
     if (*tv_nsec_to > 1000000000L) {
