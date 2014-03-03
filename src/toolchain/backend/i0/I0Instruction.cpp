@@ -195,6 +195,7 @@ int64_t I0Instruction::GetOperandEncodingLength(I0Instruction::I0Operand operand
                 case I0Instruction::SPAWNX:
                 case I0Instruction::B:
                 case I0Instruction::SCMP:
+                case I0Instruction::GREP:
                     n = 8;
                     break;
                 case I0Instruction::EXIT:
@@ -242,6 +243,7 @@ char* I0Instruction::EncodeOperandData(char* buffer, I0Instruction::I0Operand op
                 case I0Instruction::SPAWNX:
                 case I0Instruction::B:
                 case I0Instruction::SCMP:
+                case I0Instruction::GREP:
                     // NOTE: I do not assume the host machine is little-endian, so I explicitly encode each byte of integers
                     // FIXME: Does floating-point encoding has endianess? I assume no, but I'm not sure.
                     switch(operand.ConvAttribute)
@@ -475,6 +477,7 @@ void I0Instruction::Encode(char* buffer)
             *p++ = (Operands[0].IntValue & 0xFF);
             break;
         case SCMP:
+        case GREP:
             _p = *p;
             *p++ = _p | (Operands[0].AddressingMode << 2) | (Operands[1].AddressingMode >> 1);
             *p++ = (Operands[1].AddressingMode << 7) | (Operands[2].AddressingMode << 4) | (Operands[3].AddressingMode << 1) | (Operands[4].AddressingMode >> 2);
@@ -870,6 +873,19 @@ std::string I0Instruction::ToString()
                 + ", "
                 + GetOperand(Operands[4])
                 ;
+        case GREP:
+            return asp + 
+                "grep \t"
+                + GetOperand(Operands[0])
+                + ", "
+                + GetOperand(Operands[1])
+                + ", "
+                + GetOperand(Operands[2])
+                + ", "
+                + GetOperand(Operands[3])
+                + ", "
+                + GetOperand(Operands[4])
+                ;
         default:
             abort();
     }
@@ -956,6 +972,7 @@ int64_t I0Instruction::GetLength()
             n += 1;
             break;
         case SCMP:
+        case GREP:
             n += 4;
             n += GetOperandEncodingLength(Operands[0]);
             n += GetOperandEncodingLength(Operands[1]);

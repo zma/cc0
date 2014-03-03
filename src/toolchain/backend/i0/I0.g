@@ -99,6 +99,7 @@ instruction returns [I0Instruction *retval]
     | nop_instruction { $retval = $nop_instruction.retval; }
     | softint_instruction { $retval = $softint_instruction.retval; }
     | strcmp_instruction { $retval = $strcmp_instruction.retval; }
+    | grep_instruction { $retval = $grep_instruction.retval; }
     ;
 
 //////////////////////////////////////////////////////
@@ -240,7 +241,18 @@ strcmp_instruction returns [I0Instruction *retval]
         $retval->Operands[4] = $op5.retval;
     }
     ;
-
+grep_instruction returns [I0Instruction *retval]
+    : 'grep' op1 = operand ',' op2 = operand ',' op3 = operand ',' op4 = operand ',' op5 = operand
+    {
+        $retval = new I0Instruction();
+        $retval->OpCode = I0Instruction::GREP;
+        $retval->Operands[0] = $op1.retval;
+        $retval->Operands[1] = $op2.retval;
+        $retval->Operands[2] = $op3.retval;
+        $retval->Operands[3] = $op4.retval;
+        $retval->Operands[4] = $op5.retval;
+    }
+    ;
 br_mode_compare returns [I0Instruction::BJumpMode retval]
     : 'l' { $retval = I0Instruction::L; }
     | 'le' { $retval = I0Instruction::LE; }

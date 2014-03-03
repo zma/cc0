@@ -35,7 +35,8 @@ public:
         EXIT    = 0x86,
         INT     = 0x24,
         SHIFT   = 0x27,
-        SCMP    = 0x2A
+        SCMP    = 0x2A,
+        GREP    = 0x30
     };
 
     enum ConvOperandAttribute
