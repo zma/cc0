@@ -21,6 +21,6 @@ cc0 is designed and implemented in the [ECSA](http://www.cse.ust.hk/~lingu/ecsa/
 * Xiang Gao. Implemented the first version of cc0 to compile c0 code to [DISA](http://www.zhiqiangma.com/homepage/publication/dvm-tc-draft.pdf).
 * [Eric Zhiqiang Ma](http://www.ericzma.com/homepage/). Implemented libi0. Implemented the new backend for generating i0 code. Implemented the IL optimization layer. Maintaining the c0 and libi0.
 * Lin Gu. Directed the design and development of c0/cc0.
-* Weiwei Jian
+* Weiwei Jia
 * An incomplete list of contributors can be found on [github](https://github.com/zma/cc0/graphs/contributors).
 
