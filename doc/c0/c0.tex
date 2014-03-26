@@ -25,8 +25,53 @@
 \end{flushleft}
 
 \section{Introduction}
+C0 is grammatically similar to the C language and will be immediately familiar to C, C++ and Java programmers. It is a procedure-oriented language with linguistic support for massive parallelism on a modern compute cluster. 
 
 \subsection{Simple example}
+Here we have a parallel version of vector addition it in C0.
+\lstinputlisting[language=C]{examples/add.c}
+The above program adds two vectors of length 10000 with 100 runners, each runner adds up 100 elements. A runner is a separate execution of code which is similar to threads.
+
+\subsection{Program structure}
+The four key concepts in C0 are programs, types, variables and functions. A program consists of one or more source file. Each source file defines some types or functions. The program must have a function named main with no parameter or return value. The main function is where the program starts.
+
+\subsection{Keywords}
+Note: The key words add yellow are not supported currently.
+
+\begin{table}[htbp]
+\centering
+\caption{C0 key words}
+\begin{tabular}{|c|c|c|c|}
+\hline
+abort & default & goto & static\\
+\hline
+auto & continue & if & struct\\
+\hline
+bool & double & int & switch\\
+\hline
+break & else & long & true\\
+\hline
+case & enum & return & unsigned\\
+\hline
+char & extern & runner & void\\
+\hline
+commit & commitd & false & volatile\\
+\hline
+const & float & signed & watching\\
+\hline
+while & for & do & register\\
+\hline
+in & sizeof & short & standalone\\
+\hline
+\end{tabular}
+\label{table:key-words}
+\end{table}
+
+\section{Types}
+There are several types in C0: simple types, struct types, union types, function types, void type, pointer types, array types, and array segments.
+
+\subsection{Simple types}
+Table 1 shows the simple types supported (Or would be supported) in C0.
 
 \end{document}
 
