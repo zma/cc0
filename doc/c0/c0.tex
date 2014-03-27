@@ -41,7 +41,7 @@ Note: The key words add yellow are not supported currently.
 \begin{table}[htbp]
 \centering
 \caption{C0 key words}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|l|l|l|l|}
 \hline
 abort & default & goto & static\\
 \hline
@@ -71,7 +71,61 @@ in & sizeof & short & standalone\\
 There are several types in C0: simple types, struct types, union types, function types, void type, pointer types, array types, and array segments.
 
 \subsection{Simple types}
-Table 1 shows the simple types supported (Or would be supported) in C0.
+Table!\ref{table:c0-types} shows the simple types supported (Or would be supported) in C0.
+
+\begin{table}[htbp]
+\centering
+\caption{Simple types in C0}
+\begin{tabular}{|l|l|l|l|}
+\hline
+category & bits & type & range/precision\\
+\hline
+boolean & 32 & bool & true or false\\
+\hline
+\multirow{4}{*}{signed integral} & 8 & char & -128...127\\
+ & 16 & - & –32,768...32,767\\
+ & 32 & int & –2,147,483,648...2,147,483,647\\
+ & 64 & long & –9,223,372,036,854,775,808...9,223,372,036,854,775,807\\ \hline
+\multirow{4}{*}{unsigned integral} & 8 & unsigned char & 0...255\\
+ & 16 & - & 0...65,535\\
+ & 32 & unsigned int & 0...4,294,967,295\\
+ & 64 & unsigned long & 0...18,446,744,073,709,551,615\\ \hline
+\multirow{2}{*}{floating point} & 32 & float & 1.5 × 10−45 to 3.4 × 1038, 7-digit precision\\
+ & 64 & double & 5.0 × 10−324 to 1.7 × 10308, 15-digit precision\\ \hline
+\end{tabular}
+\label{table:c0-types}
+\end{table}
+
+\subsection{Struct/Union types (not supported yet)}
+Structure types are user defined types which contains other types (including other structure types).  The struct keyword is used to define a structure type. Each element of a structure is called field. Each field in a structure has its own storage space.
+\lstinputlisting[language=C]{examples/struct.c}
+The union types are similar to structure types. But the field in union shares the common storage space, so at most one field contains a meaningful value at any given time.
+
+\subsection{Function types}
+In the program, you cannot directly define variables of function types. But you can define functions who has a function type, or define a function pointer to a specified function type.
+A function type describes the function prototype, including the types of parameters and the type of return value.
+
+\subsection{Void type}
+Void type is a special type which means "no type", it can only be used for the return type of function, which means the function does not return any value, or used for defining a pointer which can points to any kind of values.
+
+\subsection{Pointer types}
+A variable of pointer type stores the address of the underlying type. We can access the value stored in the memory location which the pointer points to. This operation is called dereferencing a pointer. However, a pointer whose underlying type is void type cannot be dereferenced. 
+
+\subsection{Array types}
+An array is a data structure that contains a number of variables that are accessed through computed indices. The variables contained in an array, also called the elements of the array, are all of the same type, and this type is called the element type of the array. We use array[index] to access the elements of an array. The indices of the elements of an array range from 0 to Length - 1. 
+
+\subsection{Array segment}
+An array segment is logically same as an array (or a pointer). However, it restricts the access of elements to a specified range. The array segment is represented as array[start,,end], the start is inclusive and end is exclusive.
+
+\subsection{Standalone}
+standalone is a special keyword of C0. It is for global variables which are in the Shared Region (SR). When a global variable is standalone, it always monopolizes one or many memory pages. The main purpose of using standalone is to reduce commit conflict among different global variables, since the basic unit of memory space management is a page.
+
+\begin{verbatim}
+standalone long a;
+standalone long b;
+\end{verbatim}
+For the above example, if runner A modify a and runner B modify b, there will be no commit conflict.
+
 
 \end{document}
 
