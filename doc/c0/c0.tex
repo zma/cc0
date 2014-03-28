@@ -71,7 +71,7 @@ in & sizeof & short & standalone\\
 There are several types in C0: simple types, struct types, union types, function types, void type, pointer types, array types, and array segments.
 
 \subsection{Simple types}
-Table!\ref{table:c0-types} shows the simple types supported (Or would be supported) in C0.
+Table~\ref{table:c0-types} shows the simple types supported (Or would be supported) in C0.
 
 \begin{table}[htbp]
 \centering
@@ -126,6 +126,68 @@ standalone long b;
 \end{verbatim}
 For the above example, if runner A modify a and runner B modify b, there will be no commit conflict.
 
+\section{Expressions and Statements}
+
+\subsection{Expressions}
+Expressions are constructed from operands and operators. The operators of an expression indicate which operations to apply to the operands. Examples of operators include +, -, *, /. Examples of operands include literals, fields, local variables, and expressions.
+When an expression contains multiple operators, the precedence of the operators controls the order in which the individual operators are evaluated. For example, the expression x + y * z is evaluated as x + (y * z) because the * operator has higher precedence than the + operator.
+Table~\ref{table:c0-operators} summarizes C0 operators, listing the operator categories in order of precedence from highest to lowest. Operators in the same category have equal precedence.
+
+\begin{table}[htbp]
+\centering
+\caption{Operators in C0}
+\begin{tabular}{|l|l|l|}
+\hline
+Category & Expression & Description\\
+\hline
+\multirow{6}{*}{Primary} & x.m & Field access\\
+ & x(...) & Method invocation\\
+ & x[...] & Array or array segment access\\
+ & x++ & Post-increment\\
+ & x-- & Post-decrement\\
+ & x->y & Pointer\\ \hline
+\multirow{9}{*}{Unary} & *x & Dereference\\
+ & \&x & Referencing the address\\
+ & +x & Identity\\
+ & -x & Negation\\
+ & !x & Logical negation\\
+ & ~x & Bitwise negation\\
+ & ++x & Pre-increment\\
+ & --x & Pre-decrement\\
+ & (T)x & Explicitly convert x to type T\\ \hline
+\multirow{3}{*}{Multiplicative} & x * y & Multiplication\\
+ & x / y & Division\\
+ & x \% y & Remainder\\ \hline
+\multirow{2}{*}{Additive} & x + y & Addition\\
+ & x - y & Subtraction\\ \hline
+\multirow{2}{*}{Shift} & x << y & Shift left\\
+ & x >> y & Shift right\\ \hline
+\multirow{4}{*}{Relational} & x < y & Less than\\
+ & x > y & Greater than\\
+ & x <= y & Less than or equal\\
+ & x >= y & Greater than or equal\\ \hline
+\multirow{2}{*}{Equality} & x == y & Equal\\
+ & x != y & Not equal\\ \hline
+Bitwise AND & x \& y & Integer bitwise AND\\ \hline
+Bitwise XOR & x \^ y & Integer bitwise XOR\\ \hline
+Bitwise OR & x | y & Integer bitwise OR\\ \hline
+Logical AND & x \&\& y & Boolean logical AND\\ \hline
+Logical OR & x || y & Boolean logical OR\\ \hline
+Conditional & x ? y : z & Evaluates y if x is true, z if x is false\\ \hline
+\multirow{2}{*}{Assignment} & x = y & Assignment\\
+ & x op= y & Compound assignment; supported operators are *=  /= \%= +=  -=  <<=  >>=  \&=  \^=  |=\\ \hline
+\end{tabular}
+\label{table:c0-operators}
+\end{table}
+
+\subsection{Statements}
+The actions of a program are expressed using statements. 
+A block permits multiple statements to be written in contexts where a single statement is allowed. A block consists of a list of statements written between the delimiters { and }.
+Declaration statements are used to declare local variables and constants.
+Expression statements are used to evaluate expressions. Expressions that can be used as statements include method invocations, assignments using = and the compound assignment operators, and increment and decrement operations using the ++ (Not supported yet) and -- (Not supported yet) operators.
+Selection statements are used to select one of a number of possible statements for execution based on the value of some expressions. In this group are the if and switch statements.
+Iteration statements are used to repeatedly execute an embedded statement. In this group are the while, do, and for statements.
+Jump statements are used to transfer control. In this group are the break, continue, goto, and return statements.
 
 \end{document}
 
