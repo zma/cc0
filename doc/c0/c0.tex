@@ -14,6 +14,7 @@
 \usepackage{alltt}
 \usepackage{listings}
 \usepackage[normalem]{ulem}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \lstset{basicstyle=\ttfamily\small, language=C, breaklines=true}
 
 
@@ -230,8 +231,67 @@ For example, to create a qsort runner in space SPACE1:
 \section{Runtime Environment}
 
 \subsection{Memory Layout}
-Each runner runs in one space of the many spaces supported. The AMR is accessible from all spaces and can be used to share data across spaces. This following figure illustrates the spaces.
+Each runner runs in one space of the many spaces supported. The AMR is accessible from all spaces and can be used to share data across spaces. Fig.~\ref{fig:c0-spaces} illustrates the spaces.
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=5.8in]{figure/spaces.eps}
+  \caption{Spaces}
+  \label{fig:c0-spaces}
+\end{center}
+\end{figure}
+
+The memory layout from the view inside of one space is as follows.
+
+\subsection{Program loading}
+A c0 program will be compiled into a binary in the ELF format. 
+At the start of the L0, the program loader will perform the following operations
+
+\begin{itemize}
+	\item Load the ELF binary from the disk
+	\item Parse the ELF headers
+	\item For each section of ELF. (We only use the following sections: “.text”, “.data”, “.rodata”, “.bss”. )
+		\begin{itemize}
+			\item Allocate the virtual memory range 
+			\item Copy/map the data block into the memory; note that the length of data block might be less than the memory range. Fill the rest of the space with zeros.
+		\end{itemize}
+	\item Create a snapshot, includes:
+		\begin{itemize}
+			\item Heap: all the memory ranges of the ELF sections in memory
+			\item Initial dynamic heap with fixed size (e.g.1GB?, but we don’t need to allocate memory pages now)
+			\item Fixed size (e.g. 64KB?) stack
+		\end{itemize}
+	\item Start a new runner with the entry point and the created snapshot.
+\end{itemize}
+
+The memory layout is illustrated in Fig.~\ref{fig:c0-elf}[1].\\
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=5.8in]{figure/elf.eps}
+  \caption{ELF file loading}
+  \label{fig:c0-elf}
+\end{center}
+\end{figure}
 
 
+\line(1, 0){450}\\
+
+Update History\\
+\begin{itemize}
+	\item Originally written by Xiang Gao.
+	\item May. 8, 2013. Add space for the runner statement. - zma
+	\item Feb. 5, 2014. Revise this document. - Weiwei Jia
+	\item Feb. 18, 2014. Revise this document. - Zhiqiang ma, Weiwei Jia
+	\item Feb. 24, 2014. Corrected several typos and improved writings of several places. – Zhiqiang Ma
+	\item Feb. 26, 2014. Add standalone-related stuff for keywords and a section to introduce it. – zma
+	\item Feb. 28, 2014. Revisions from lingu; add a figure illustrating the spaces. – zma
+	\item Feb. 28, 2014. Mark that `double` is supported; `int` is buggy yet. –zma
+	\item Mar. 20, 2014. Mark bitwise AND, OR and XOR (\&, |, \^) that is supported. Fix several strange names. –zma
+\end{itemize}
+
+\line(1, 0){450}\\
+
+[1] http://wiki.osdev.org/ELF
 
 \end{document}
