@@ -189,5 +189,49 @@ Selection statements are used to select one of a number of possible statements f
 Iteration statements are used to repeatedly execute an embedded statement. In this group are the while, do, and for statements.
 Jump statements are used to transfer control. In this group are the break, continue, goto, and return statements.
 
-\end{document}
 
+\section{Task and depending task}
+
+\subsection{Create a runner (task)}
+
+Defining a runner is just the same as defining a function. Actually any function satisfying the necessary constraints (will be mentioned later) can be started as a runner. A same function can either be directly invoked or be started as a new runner.
+The function that can become a runner must have the prototype with the following constraints
+
+\begin{itemize}
+	\item It has no return type (with return type void)
+	\item The parameters can only be either 1) simple types, or 3) array segments, or 3) structure types whose fields meet the constraints of 1) or 3).
+\end{itemize}
+
+The above constraints ensure that the input parameters to a new runner will not reference external memory locations not in the range of the parameters. The use of array segments constraints the use of pointers so the runtime can create the snapshots efficiently.
+
+\subsection{Creating instance of runners}
+
+The syntax of creating a runner is the same as invoking a function, plus the keyword runner. Note that the runner will only start to execute after current runner exits.
+Example (quick sort):
+
+\lstinputlisting[language=C]{examples/sort.c}
+
+\subsection{Watchers (depending tasks)}
+
+The watchers are runners with additional startup conditions. Specifically, it will start after the parent runner commits successfully and the specified memory location has been modified since the creation of the watcher.
+Defining a watcher is similar to define a normal runner.
+To create a watcher, we also use runner keywords, with additional parameters to specify the memory location to watch. The watcher will get executed if the content of the memory has changed. The parameter can either be the pointer to a simple type or structure type, or an array segment.
+
+\lstinputlisting[language=C]{examples/watcher.c}
+
+\subsection{Creating runners in another space}
+
+The memory space in i0 is separated into many spaces which is a continuous range. Each space has a space specifier and the offset ranges for all spaces are the same. By default, the runner statement creates runners in the same space as the parent runner. The space can be specified by the in clause of the runner statement.
+
+For example, to create a qsort runner in space SPACE1:
+
+\lstinputlisting[language=C]{examples/runner.c}
+
+\section{Runtime Environment}
+
+\subsection{Memory Layout}
+Each runner runs in one space of the many spaces supported. The AMR is accessible from all spaces and can be used to share data across spaces. This following figure illustrates the spaces.
+
+
+
+\end{document}
