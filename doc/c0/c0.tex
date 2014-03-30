@@ -243,6 +243,40 @@ Each runner runs in one space of the many spaces supported. The AMR is accessibl
 
 The memory layout from the view inside of one space is as follows.
 
+\begin{table}[htbp]
+\centering
+\caption{Memory layout}
+\begin{tabular}{|l|l|p{5cm}|}
+\hline
+Higher address & & L0 memory type (indicated in\\
+ & & colors):\\\cline{1-2}
+ & & Heap \\ \cline{1-1}
+ & & Stack \\ \cline{1-1}
+ & & \\ \cline{1-2}
+ & [Runner j] Additional Heap range of (array segments) & \\ \cline{1-2}
+ & & * The locations and sizes of\\ \cline{1-2}
+ & [Runner 0] Stack (grows to lower address) & additional heap ranges may be\\\cline{1-2}
+ & ... & overlapped with other\\\cline{1-2}
+ & [Runner i] Stack (grows to lower address) & stack/heap ranges, depending on\\\cline{1-2}
+ & ... & the location of array segments\\\cline{1-2}
+ & & passed in the startup parameters.\\\cline{1-2}
+ & [Runner i*] Additional Heap range of array segments & \\\cline{1-2}
+ & & \\\cline{1-2}
+ & [Shared] Runtime Heap (grows to higher address) & \\\cline{1-2}
+ & .bss (Global variables without initial value) & \\\cline{1-2}
+ & .data (Global variables with initial values) & \\\cline{1-2}
+ & [Shared] .rodata (Read-only data) & \\\cline{1-2}
+ & [Shared] .text (Code) & \\\cline{1-2}
+ & & \\\cline{1-2}
+ & L0 Internal range & \\\cline{1-2}
+ & & \\\cline{1-2}
+ Lower address & & \\
+ & & \\\cline{1-2}
+\hline
+\end{tabular}
+\label{table:c0-memory}
+\end{table}
+
 \subsection{Program loading}
 A c0 program will be compiled into a binary in the ELF format. 
 At the start of the L0, the program loader will perform the following operations
