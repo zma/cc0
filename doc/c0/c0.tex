@@ -285,6 +285,21 @@ To create a watcher, we also use runner keywords, with additional parameters to 
 %\mybox[gray!20]
 %{\color{blue}{\lstinputlisting[language=C]{examples/watcher.c}}}
 
+\paragraph{Difference between ``commit'' and ``commitd'', ``abort'' and ``abortd''.} ``commitd'' and ``abortd'' are for depending tasks only. Normal tasks only use ``commit'' and ``abort''.
+
+For depending tasks:
+
+\begin{enumerate}
+\item When you create a depending task, you create a depending task type which can be considered as a ``task template''.
+\item The depending task type watches the commits to the watched memory ranges.
+\item When a depending task type is activated, a depending task instance, which can be considered as a normal task, is created. That is, the depending task type keeps watching the memory range changes after it is activated.
+\item If there is a depending task instance in the task queue waiting to be scheduled, a commit to the depending task's depending ranges will not activate the depending task and create an instance any more.
+\item The ``commit'' and ``abort'' have effect on the depending task instance only.
+\item The ``commitd'' and ``abortd'' will commit/abort and delete the depending task type upon success.
+\end{enumerate}
+
+This way, it is ensured that after each commits to the watched ranges by a depending task, at least one depending task instance is created. Hence, no changes is missed by the depending task before it deletes itself by ``commitd'' or ``abortd'', and many changes may be ``aggregatively'' checked by a depending task instance for avoiding creating too many depending task instances that will abort and improving the efficiency.
+
 {\color{lightblue}{\subsection{Creating runners in another space}}}
 
 The memory space in i0 is separated into many spaces which is a continuous range. Each space has a space specifier and the offset ranges for all spaces are the same. By default, the runner statement creates runners in the same space as the parent runner. The space can be specified by the in clause of the runner statement.
@@ -400,6 +415,7 @@ Update History\\
 	\item Mar. 20, 2014. Mark bitwise AND, OR and XOR (\&, |, {\char`\^}) that is supported. Fix several strange names. - zma
 	\item Apr. 3, 2014. Translate C0 doc into Latex version. - Weiwei Jia.
     \item Apr. 6, 2014. Resize the figure 1, 2 and table 4 and make them closer to corresponding descriptions.
+    \item Apr. 29, 2014. Add the ``differene between commit/abort and commitd/abortd''. - zma
 \end{itemize}
 
 \color{black}{\line(1, 0){450}}\\
