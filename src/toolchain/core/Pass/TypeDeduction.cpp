@@ -555,6 +555,8 @@ void TypeDeduction::Visit(BinaryExpression* node)
             }
             else
             {
+                std::cout << "ERROR: TypeDeduction.cpp @558\n";
+                exit(-1);
                 targetType = NULL;
             }
             break;
