@@ -7,9 +7,9 @@
 
 #include <core/Core.h>
 #include <frontend/c/CSourceParser.h>
-#include <backend/disa/DisaCodeGenerator.h>
+// #include <backend/disa/DisaCodeGenerator.h>
+// #include <backend/disa/DisaAssemblyParser.h>
 #include <backend/i0/I0CodeGenerator.h>
-#include <backend/disa/DisaAssemblyParser.h>
 #include <binary/elf/ElfFileWriter.h>
 #include <binary/flat/FlatFileWriter.h>
 #include <core/Symbol/SymbolAddressAllocator.h>
@@ -42,19 +42,16 @@ void DumpScope(SymbolScope *scope, std::ofstream &dump)
 void print_usage(char *cmd)
 {
     printf(
-"    cc0 - A c0 compiler\n"
+"    cc0 - A c0 compiler which generates i0 code.\n"
 "\n"
 "    Usage: \n"
-"        cc0 [-g|--debug] [--i0|--disa] [-h|--help]\n"
+"        cc0 [-g|--debug] [-h|--help]\n"
 "            infile -o outfile\n"
 "\n"
 "\n"
 "    Options:\n"
 "    --debug, -g\n"
 "              Output debugging information.\n"
-"    --i0 (default)\n"
-"    --disa\n"
-"              The type of target generated code.\n"
 "\n"
     );
 
@@ -75,8 +72,9 @@ int main(int argc, char **argv)
     context->BssStart =   0x440000000;
 
     // NOTE: default targe code type
-    // CompilationContext::GetInstance()->CodeType = CODE_TYPE_DISA;
+    // Only CODE_TYPE_I0 is supported
     CompilationContext::GetInstance()->CodeType = CODE_TYPE_I0;
+    codeTypeDefined = true;
     
     for(int i = 1; i < argc; i++)
     {
@@ -92,6 +90,7 @@ int main(int argc, char **argv)
         {
             CompilationContext::GetInstance()->Debug = true;
         }
+        /*
         else if (strcmp(argv[i], "--i0") == 0)
         {
             if (codeTypeDefined) {
@@ -113,6 +112,7 @@ int main(int argc, char **argv)
             CompilationContext::GetInstance()->CodeType = CODE_TYPE_DISA;
             codeTypeDefined = true;
         }
+        */
         else if ( (strcmp(argv[i], "--help") == 0) || strcmp(argv[i], "-h") == 0 )
         {
             print_usage(argv[0]);
@@ -307,12 +307,12 @@ int main(int argc, char **argv)
 
     CodeGenerator *codegen = NULL;
     //Generate assembly code from IL
-    if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_DISA) {
+    /* if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_DISA) {
         //Generate DISA assembly code from IL
         codegen = new DisaCodeGenerator();
-    } else if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_I0) {
+        } else */
+    if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_I0) {
         codegen = new I0CodeGenerator();
-        // codegen = new DisaCodeGenerator();
     } else {
         printf("Error: unsupported CodeType.\n");
         return -1;
@@ -328,9 +328,11 @@ int main(int argc, char **argv)
         if(fileExt == "s")
         {
             SourceParser *parser = NULL;
-            if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_DISA) {
+            /* if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_DISA) {
                 parser = new DisaAssemblyParser();
-            } else {
+            } else
+            */
+            {
                 // TODO: support i0 assembly
                 printf(".s file is not supported for i0.\n");
                 return -1;
