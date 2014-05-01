@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include "../Pass/ILGenerator.h"
 
 ExpressionTreeDumper::ExpressionTreeDumper()
 {
@@ -293,7 +294,11 @@ void ExpressionTreeDumper::Visit(BinaryExpression* node)
     node->GetLeftOperand()->Accept(this);
     printf(" %s ", this->GetOpeartorString(node->GetAction()).c_str());
     node->GetRightOperand()->Accept(this);
-    printf(")");
+    printf("):");
+    Type *type = node->GetTag<Type>("Type");
+
+    ILGenerator igen;
+    printf("%d", igen.GetOperandType(type));
 }
 
 

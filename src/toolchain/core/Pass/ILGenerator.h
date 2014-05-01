@@ -65,6 +65,7 @@ protected:
     void GenerateIL(IL::ILOpcode opcode, const IL::ILOperand &operand1, const IL::ILOperand &operand2, const IL::ILOperand &operand3);
     void GenerateIL(IL::ILOpcode opcode, const IL::ILOperand &operand1, const IL::ILOperand &operand2, const IL::ILOperand &operand3, const IL::ILOperand &operand4);
     void GenerateIL(IL::ILOpcode opcode, const std::vector<IL::ILOperand> &operands);
+public:
     IL::ILOperandType GetOperandType(Type *type);
 };
 

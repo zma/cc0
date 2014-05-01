@@ -47,7 +47,21 @@ void ILGenerator::Visit(BinaryExpression* node)
     right->Accept(this);
 
     Expression::ExpressionAction action = node->GetAction();
+
+    // Note: the type here is the target type.
+    // For certain operations, the type of operands may not be
+    // the same as target operands type.
+    // For example, comparing 2 doubles. The target is bool.
     Type *type = node->GetTag<Type>("Type");
+
+    if(CompilationContext::GetInstance()->Debug)
+    {
+        std::cout << "DBG: " << "IL generating: comparison: type "
+                  << GetOperandType(type) << std::endl;
+    }
+
+   
+    
     IL::ILOpcode opcode;
     IL::ILOperand op1, op2, op3;
     op1 = GenerateTemp(type);
@@ -117,7 +131,18 @@ void ILGenerator::Visit(BinaryExpression* node)
             goto comparison;
         comparison:
             op1.OperandType = IL::I; // Bool
-            op2.OperandType = op3.OperandType = GetOperandType(type);
+
+            // the op2 and op3's types no need to the same as the target
+            // op2.OperandType = op3.OperandType = GetOperandType(type);
+            op2.OperandType = op3.OperandType = GetOperandType(left->GetTag<Type>("Type"));
+            
+            if(CompilationContext::GetInstance()->Debug)
+            {
+                std::cout << "DBG: " << "IL generating: comparison: " << op1.OperandType << ", "
+                          << op2.OperandType << ", "
+                          << op3.OperandType << std::endl;
+            }
+
             break;
         case Expression::AndAlso:
         case Expression::OrElse:
