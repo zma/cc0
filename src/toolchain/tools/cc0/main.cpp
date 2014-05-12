@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <map>
+
 #include <core/Core.h>
 #include <frontend/c/CSourceParser.h>
 // #include <backend/disa/DisaCodeGenerator.h>
@@ -16,12 +18,12 @@
 #include <core/Pass/ConstantPropagation.h>
 #include <core/Pass/TypeDeduction.h>
 
-#include <map>
+#include "../../../external/mem.h"
 
 void DumpScope(SymbolScope *scope, std::ofstream &dump)
 {
     char buffer[100];
-    
+
     for(std::map<std::string, Symbol *>::iterator it = scope->GetSymbolTable()->begin(); it != scope->GetSymbolTable()->end(); ++it)
     {
         Symbol *symbol = it->second;
@@ -63,19 +65,20 @@ int main(int argc, char **argv)
     bool codeTypeDefined = false;
 
     CompilationContext *context = CompilationContext::GetInstance();
-    
+
     context->TextStart =  0x400000000;
     context->DataStart =  0x400004000;
     context->RDataStart = 0x400008000;
-    
+
     //NOTE: Currently, all global variables are put in the bss section and are NOT initialized with zeros, the data/rdata is not used.
-    context->BssStart =   0x440000000;
+    // context->BssStart =   0x440000000;
+    context->BssStart =   AMR_OFFSET_BEGIN;
 
     // NOTE: default targe code type
     // Only CODE_TYPE_I0 is supported
     CompilationContext::GetInstance()->CodeType = CODE_TYPE_I0;
     codeTypeDefined = true;
-    
+
     for(int i = 1; i < argc; i++)
     {
         if(strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0)
@@ -127,7 +130,7 @@ int main(int argc, char **argv)
     ILProgram *il = NULL;
 
     std::vector<std::string> &inputFiles = CompilationContext::GetInstance()->InputFiles;
-    
+
     if(inputFiles.size() == 0)
     {
         print_usage(argv[0]);
@@ -145,21 +148,21 @@ int main(int argc, char **argv)
         std::string fileExt = inputFile.substr(inputFile.find_last_of(".") + 1);
         if(fileExt == "c")
         {
-            
+
             char tmpFileName[255];
             sprintf(tmpFileName, "%s.tmp", inputFile.c_str());
-            
+
             // tmpnam(tmpFileName);
             printf("temp file is: %s\n", tmpFileName);
-            
+
             context->CurrentFileName = inputFile;
-            
+
             std::string cmdline = "gcc -E " + inputFile + " -o " + tmpFileName;
             if(system(cmdline.c_str()) != 0)
             {
-               return -1; 
+               return -1;
             }
- 
+
             if(CompilationContext::GetInstance()->Debug)
             {
                 printf("--------------------------------------\n");
@@ -171,22 +174,22 @@ int main(int argc, char **argv)
 
             // Note: leave tmpFile for user to check
             // remove(tmpFileName);
-  
+
             if(CompilationContext::GetInstance()->Debug)
             {
                 printf("--------------------------------------\n");
                 printf("ConstantPropagation...\n");
             }
-           
+
             ConstantPropagation *constantPropagation = new ConstantPropagation();
             context->CodeDom->Accept(constantPropagation);
-  
+
             if(CompilationContext::GetInstance()->Debug)
             {
                 printf("--------------------------------------\n");
                 printf("ConstantPropagation...\n");
             }
-             
+
             TypeDeduction *typeDeduction = new TypeDeduction();
             context->CodeDom->Accept(typeDeduction);
 
@@ -195,7 +198,7 @@ int main(int argc, char **argv)
                 printf("--------------------------------------\n");
                 printf("codeDom Dump:\n");
                 ExpressionTreeDumper *codeDomDump = new ExpressionTreeDumper();
-               
+
                 context->CodeDom->Accept(codeDomDump);
             }
 
@@ -258,9 +261,9 @@ int main(int argc, char **argv)
     ILOptimizer *ilopt = NULL;
 
     ilopt = new ILOptimizer();
-    
+
     context->IL = ilopt->Optimize(il);
-    
+
     // print optimized IL
     il = context->IL;
     if(CompilationContext::GetInstance()->Debug && il != NULL)
@@ -371,9 +374,9 @@ int main(int argc, char **argv)
         std::ofstream mapdump(mapFileName.c_str());
         DumpScope(SymbolScope::GetRootScope(), mapdump);
     }
-    
+
     printf("Maximum stack frame size: 0x%llX\n", (long long )(context->MaxStackFrame));
-    
+
     // TODO: Optimize the assembly code
     TargetOptimizer *targetOpt = NULL;
 
@@ -405,4 +408,3 @@ int main(int argc, char **argv)
     return 0;
 
 }
-
