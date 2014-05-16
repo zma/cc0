@@ -2,7 +2,7 @@
 
 long space;
 
-// To create a qsort runner in SPACE1
+// To create a qsort task in SPACE1
 
 space = SPACE1;
 runner qsort(0, 100)
