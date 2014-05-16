@@ -320,7 +320,7 @@ Each task runs in one space of the many spaces supported. The aliased memory reg
 
 \begin{figure}[htbp]
 \begin{center}
-  \includegraphics[width=14cm]{figure/spaces.eps}
+  \includegraphics[width=5in]{figure/spaces.eps}
   \caption{Spaces}
   \label{fig:c0-spaces}
 \end{center}
@@ -367,7 +367,7 @@ Higher address & & L0 memory type (indicated in\\
 {\subsection{Program loading}}
 
 A c0 program will be compiled into a binary in the ELF format.
-At the start of the L0, the program loader will perform the following operations
+At the start of the L0, the program loader will perform the following operations.
 
 \begin{itemize}
 	\item Load the ELF binary from the disk
@@ -385,14 +385,16 @@ At the start of the L0, the program loader will perform the following operations
 		\end{itemize}
 	\item Start a new task with the entry point and the created snapshot.
 \end{itemize}
-The memory layout is illustrated in Fig.~\ref{fig:c0-elf}[1].\\
-\begin{figure}[htbp]
-\begin{center}
-  \includegraphics[width=14cm]{figure/elf.eps}
-  \caption{ELF file loading}
-  \label{fig:c0-elf}
-\end{center}
-\end{figure}
+% The memory layout is illustrated in Fig.~\ref{fig:c0-elf}[1].\\
+% [1] http://wiki.osdev.org/ELF
+
+% \begin{figure}[htbp]
+% \begin{center}
+%   \includegraphics[width=14cm]{figure/elf.eps}
+%   \caption{ELF file loading}
+%   \label{fig:c0-elf}
+% \end{center}
+% \end{figure}
 
 \line(1, 0){450}\\
 
@@ -415,7 +417,5 @@ Update History\\
 \end{itemize}
 
 \color{black}{\line(1, 0){450}}\\
-
-[1] http://wiki.osdev.org/ELF
 
 \end{document}
