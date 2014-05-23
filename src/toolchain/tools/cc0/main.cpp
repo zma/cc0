@@ -146,7 +146,7 @@ int main(int argc, char **argv)
     {
         std::string inputFile = CompilationContext::GetInstance()->InputFiles.front();
         std::string fileExt = inputFile.substr(inputFile.find_last_of(".") + 1);
-        if(fileExt == "c")
+        if(fileExt == "c" || fileExt == "c0")
         {
 
             char tmpFileName[255];
@@ -157,7 +157,7 @@ int main(int argc, char **argv)
 
             context->CurrentFileName = inputFile;
 
-            std::string cmdline = "gcc -E " + inputFile + " -o " + tmpFileName;
+            std::string cmdline = "cpp " + inputFile + " -o " + tmpFileName;
             if(system(cmdline.c_str()) != 0)
             {
                return -1;
@@ -341,6 +341,8 @@ int main(int argc, char **argv)
                 return -1;
             }
             parser->Parse(inputFile);
+        } else if(fileExt == "c") {
+            printf("WARNING: It is recommended to use .c0 instead of .c as the source file extension for c0 programs.\n");
         }
     }
 
