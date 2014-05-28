@@ -20,26 +20,32 @@
 
 #include "../../../external/mem.h"
 
-void DumpScopeTypes(SymbolScope *scope, std::ofstream &dump)
+void DumpScopeTypes(SymbolScope *scope, std::ofstream &dump, std::string prefix)
 {
     char buffer[100];
+    dump << prefix << "SCOPE " << scope << " type " << scope->GetScopeKind() << " {" << std::endl;
+
+    std::string cur_prefix = prefix + "  ";
 
     for(std::map<std::string, Symbol *>::iterator it = scope->GetSymbolTable()->begin(); it != scope->GetSymbolTable()->end(); ++it)
     {
         Symbol *symbol = it->second;
-        if (typeid(*(symbol->DeclType)) == typeid(FunctionType) || scope->GetScopeKind() == SymbolScope::Global)
+        // if (typeid(*(symbol->DeclType)) == typeid(FunctionType) || scope->GetScopeKind() == SymbolScope::Global)
         {
-            sprintf(buffer, "%s", symbol->Name.c_str());
-            // TODO: print type
-            dump << buffer << std::endl;
+        	dump << cur_prefix <<
+        			symbol->Name << "\t" <<
+        			symbol->DeclType->ToString() << "\t" <<
+        			std::endl;
         }
     }
 
     for(std::vector<SymbolScope *>::iterator it = scope->GetChildScopes()->begin(); it != scope->GetChildScopes()->end(); ++it)
     {
         SymbolScope *cs = *it;
-        DumpScopeTypes(cs, dump);
+        DumpScopeTypes(cs, dump, cur_prefix);
     }
+
+    dump << prefix << "}" << std::endl;
 }
 
 
@@ -346,7 +352,7 @@ int main(int argc, char **argv)
     std::string mapFileName = baseFileName + ".var";
 
     std::ofstream mapdump(mapFileName.c_str());
-    DumpScopeTypes(SymbolScope::GetRootScope(), mapdump);
+    DumpScopeTypes(SymbolScope::GetRootScope(), mapdump, "");
     mapdump.close();
 
     // if it is for -c, return now
