@@ -20,6 +20,29 @@
 
 #include "../../../external/mem.h"
 
+void DumpScopeTypes(SymbolScope *scope, std::ofstream &dump)
+{
+    char buffer[100];
+
+    for(std::map<std::string, Symbol *>::iterator it = scope->GetSymbolTable()->begin(); it != scope->GetSymbolTable()->end(); ++it)
+    {
+        Symbol *symbol = it->second;
+        if (typeid(*(symbol->DeclType)) == typeid(FunctionType) || scope->GetScopeKind() == SymbolScope::Global)
+        {
+            sprintf(buffer, "%s", symbol->Name.c_str());
+            // TODO: print type
+            dump << buffer << std::endl;
+        }
+    }
+
+    for(std::vector<SymbolScope *>::iterator it = scope->GetChildScopes()->begin(); it != scope->GetChildScopes()->end(); ++it)
+    {
+        SymbolScope *cs = *it;
+        DumpScopeTypes(cs, dump);
+    }
+}
+
+
 void DumpScope(SymbolScope *scope, std::ofstream &dump)
 {
     char buffer[100];
@@ -44,16 +67,18 @@ void DumpScope(SymbolScope *scope, std::ofstream &dump)
 void print_usage(char *cmd)
 {
     printf(
-"    cc0 - A c0 compiler which generates i0 code.\n"
+"cc0 - A c0 compiler which generates i0 code.\n"
 "\n"
-"    Usage: \n"
-"        cc0 [-g|--debug] [-h|--help]\n"
-"            infile -o outfile\n"
+"Usage: \n"
+"    cc0 [-g|--debug] [-c] [-h|--help]\n"
+"        infile -o outfile\n"
 "\n"
 "\n"
-"    Options:\n"
-"    --debug, -g\n"
-"              Output debugging information.\n"
+"Options:\n"
+"--debug, -g\n"
+"        Output debugging information.\n"
+"-c\n"
+"        Compile only.\n"
 "\n"
     );
 
@@ -92,6 +117,10 @@ int main(int argc, char **argv)
         else if( (strcmp(argv[i], "--debug") == 0) || (strcmp(argv[i], "-g") == 0) )
         {
             CompilationContext::GetInstance()->Debug = true;
+        }
+        else if( (strcmp(argv[i], "-c") == 0))
+        {
+            CompilationContext::GetInstance()->CompileOnly = true;
         }
         /*
         else if (strcmp(argv[i], "--i0") == 0)
@@ -215,7 +244,7 @@ int main(int argc, char **argv)
     }
 
 
-    if(CompilationContext::GetInstance()->Debug && il != NULL)
+    if((CompilationContext::GetInstance()->Debug || CompilationContext::GetInstance()->CompileOnly) && il != NULL)
     {
         std::string baseFileName = CompilationContext::GetInstance()->OutputFile;
         int pos = baseFileName.find_last_of(".");
@@ -266,10 +295,10 @@ int main(int argc, char **argv)
 
     // print optimized IL
     il = context->IL;
-    if(CompilationContext::GetInstance()->Debug && il != NULL)
+    if((CompilationContext::GetInstance()->Debug || CompilationContext::GetInstance()->CompileOnly) && il != NULL)
     {
-        printf("--------------------------------------\n");
-        printf("Optimized IL:\n");
+        // printf("--------------------------------------\n");
+        // printf("Optimized IL:\n");
         std::string baseFileName = CompilationContext::GetInstance()->OutputFile;
         int pos = baseFileName.find_last_of(".");
         if(pos != -1)
@@ -306,6 +335,24 @@ int main(int argc, char **argv)
         }
 
         ildump.close();
+    }
+
+    std::string baseFileName = CompilationContext::GetInstance()->OutputFile;
+    int pos = baseFileName.find_last_of(".");
+    if(pos != -1)
+    {
+        baseFileName = baseFileName.substr(0, pos);
+    }
+    std::string mapFileName = baseFileName + ".var";
+
+    std::ofstream mapdump(mapFileName.c_str());
+    DumpScopeTypes(SymbolScope::GetRootScope(), mapdump);
+    mapdump.close();
+
+    // if it is for -c, return now
+    if(CompilationContext::GetInstance()->CompileOnly) {
+        // TODO: dump the variable table
+        return 0;
     }
 
     CodeGenerator *codegen = NULL;
@@ -346,7 +393,7 @@ int main(int argc, char **argv)
         }
     }
 
-    if(context->Debug)
+    if((CompilationContext::GetInstance()->Debug || CompilationContext::GetInstance()->CompileOnly))
     {
         std::string baseFileName = CompilationContext::GetInstance()->OutputFile;
         std::string dumpFileName, mapFileName;
@@ -375,6 +422,7 @@ int main(int argc, char **argv)
 
         std::ofstream mapdump(mapFileName.c_str());
         DumpScope(SymbolScope::GetRootScope(), mapdump);
+        mapdump.close();
     }
 
     printf("Maximum stack frame size: 0x%llX\n", (long long )(context->MaxStackFrame));

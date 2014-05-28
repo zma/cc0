@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 #include <core/Misc/Location.h>
 #include <vector>
 #include <stdint.h>
@@ -21,6 +21,7 @@ public:
     static CompilationContext * GetInstance();
 public:
     bool Debug;
+    bool CompileOnly;
     int CodeType;
     int NumErrors;
     int NumWarnings;
@@ -31,11 +32,11 @@ public:
     int64_t MaxStackFrame;
     std::vector<std::string> InputFiles;
     std::string OutputFile;
-    
+
     Expression *CodeDom;
     ILProgram *IL;
     TargetProgram *Target;
-    
+
     std::string CurrentFileName;
     ANTLR3_PARSER_struct * CurrentParser;
 protected:
@@ -45,5 +46,5 @@ public:
 public:
     void ReportError(Location loc, bool cont, const char* msg, ...);
     void ReportWarning(Location loc, const char* msg, ...);
-    
+
 };
