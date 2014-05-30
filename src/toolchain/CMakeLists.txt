@@ -26,7 +26,7 @@ if(CC0_USE_STATIC_CRT)
 			CMAKE_C_FLAGS_RELWITHDEBINFO
 			CMAKE_C_FLAGS_MINSIZEREL
 			CMAKE_C_FLAGS_DEBUG)
-			set("${flag}" "${${flag}} -static-libgcc")
+			set("${flag}" "${${flag}} -static -static-libgcc")
 		endforeach()
 	endif()
 	
@@ -37,7 +37,7 @@ if(CC0_USE_STATIC_CRT)
 			CMAKE_CXX_FLAGS_RELWITHDEBINFO
 			CMAKE_CXX_FLAGS_MINSIZEREL
 			CMAKE_CXX_FLAGS_DEBUG)
-			set(${flag} "${${flag}} -static-libgcc -static-libstdc++")
+			set(${flag} "${${flag}} -static -static-libgcc -static-libstdc++")
 		endforeach()
 	endif()
 	
