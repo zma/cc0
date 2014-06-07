@@ -1,3 +1,4 @@
-../../zyzzyva/zyzzyva/src/L0/mem.h               ./src/external/mem.h
+../../zyzzyva/zyzzyva/src/L0/mem.h                    ./src/external/mem.h
 ../../zyzzyva/zyzzyva/src/L0/mem.home.h               ./src/external/mem.home.h
-../../zyzzyva/zyzzyva/src/L0/types.h               ./src/external/types.h
+../../zyzzyva/zyzzyva/src/L0/types.h                  ./src/external/types.h
+../../zyzzyva/zyzzyva/src/L0/sys_config.h             ./src/external/sys_config.h

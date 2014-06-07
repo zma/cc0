@@ -19,6 +19,7 @@
 #include <core/Pass/TypeDeduction.h>
 
 #include "../../../external/mem.h"
+#include "../../../external/sys_config.h"
 
 void DumpScopeTypes(SymbolScope *scope, std::ofstream &dump, std::string prefix)
 {
@@ -97,9 +98,13 @@ int main(int argc, char **argv)
 
     CompilationContext *context = CompilationContext::GetInstance();
 
-    context->TextStart =  0x400000000;
-    context->DataStart =  0x400004000;
-    context->RDataStart = 0x400008000;
+    // context->TextStart =  0x400000000;
+    // context->DataStart =  0x400004000;
+    // context->RDataStart = 0x400008000;
+    // Use macros from the sys_config.h
+    context->TextStart =  I0_CODE_BEGIN;
+    context->DataStart =  I0_CODE_BEGIN + 0x4000;
+    context->RDataStart = I0_CODE_BEGIN + 0x8000;
 
     //NOTE: Currently, all global variables are put in the bss section and are NOT initialized with zeros, the data/rdata is not used.
     // context->BssStart =   0x440000000;

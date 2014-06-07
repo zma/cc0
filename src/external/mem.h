@@ -109,8 +109,12 @@
 // zeros on the right
 #define SPACE_RIGHT_ZEROS 46
 
+// the starting address of PR except the VPC/VMC impl. used ones
+// 4GB
+#define PR_BEGIN    (1UL << 32)
 // the starting address of SR
-#define SR_BEGIN	0x400000000
+// #define SR_BEGIN	0x400000000L
+#define SR_BEGIN	0x800000000L
 // the ending address of SR
 #define SR_END		0x100000000000
 // the starting address of Cache
@@ -120,9 +124,10 @@
 
 #define MM_END		0x400000000000
 
-#define PR_START_ADDR  (1UL << 32)
-// - 1024 to protect the last page to indicate that the last one is used
-#define PR_LENGTH  (3 * (1UL << 32) - 1024)
+
+#define PR_START_ADDR  (PR_BEGIN)
+#define PR_LENGTH  ((SR_BEGIN - PR_BEGIN) - 1024)
+
 
 // obsolete
 // // persistent memory range
@@ -244,7 +249,8 @@
 // total number of pages in SR, used by the home only
 // #define NUM_OF_PAGES	((SR_END-SR_BEGIN)/PAGE_SIZE)
 // including multiple spaces
-#define NUM_OF_PAGES	(SR_END/PAGE_SIZE*N_SPACES)
+// #define NUM_OF_PAGES	(SR_END/PAGE_SIZE*N_SPACES)
+#define NUM_OF_PAGES	((SR_END + L0_SPACE_INC * N_SPACES) / PAGE_SIZE)
 
 // The current layout of the memory on VPC
 //
@@ -337,7 +343,7 @@ ss_range_t* get_ss_range(ss_t *ss, uint64_t n);
 // the ss_range_dst's field should already be ready
 uint64_t copy_no_str_cpy(ss_t *ss_dst, ss_range_t *ss_range_dst, ss_t *ss_src, ss_range_t *ss_range_src);
 
-// causion: used for a formed snapshot 
+// causion: used for a formed snapshot
 
 // get total page count from a ss
 uint64_t get_ss_page_cnt(ss_t *ss);
