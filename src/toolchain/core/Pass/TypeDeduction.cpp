@@ -510,7 +510,7 @@ void TypeDeduction::Visit(BinaryExpression* node)
                 {
                     IntegerType *leftIntType = dynamic_cast<IntegerType *>(leftType);
                     IntegerType *rightIntType = dynamic_cast<IntegerType *>(rightType);
-                    leftType = leftType = new IntegerType(MAX(leftIntType->GetSize(), rightIntType->GetSize()), leftIntType->IsSigned() || rightIntType->IsSigned());;
+                    leftType = new IntegerType(MAX(leftIntType->GetSize(), rightIntType->GetSize()), leftIntType->IsSigned() || rightIntType->IsSigned());;
                     targetType = new BooleanType();
                 }
                 else if (typeid(*rightType) == typeid(FloatingPointType))
