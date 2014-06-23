@@ -1,7 +1,11 @@
-#include "ILOptimizer.h"
-#include <core/IL/ILProgram.h>
-#include <iostream>
 #include <cstdlib>
+
+#include <iostream>
+
+#include <core/Core.h>
+#include <core/IL/ILProgram.h>
+
+#include "ILOptimizer.h"
 
 ILOptimizer::ILOptimizer()
 {
@@ -58,7 +62,8 @@ int ILOptimizer::OptimizeFunction(ILFunction *f)
     std::vector<IL> ils;
     ils = f->Body;
 
-    std::cout << "Optimizing: function START" << std::endl;
+    if(CompilationContext::GetInstance()->Debug)
+        std::cout << "Optimizing: function START" << std::endl;
 
     for (std::vector<IL>::iterator iit = ils.begin(); iit != ils.end(); ++iit)
     {
@@ -71,20 +76,24 @@ int ILOptimizer::OptimizeFunction(ILFunction *f)
         }
 
         // branch
-        std::cout << "Optimizing: " << il.ToString() << std::endl;
+        if(CompilationContext::GetInstance()->Debug)
+            std::cout << "Optimizing: " << il.ToString() << std::endl;
         if(il.Opcode == IL::CompLt || il.Opcode == IL::CompLe || il.Opcode == IL::CompGt || il.Opcode == IL::CompGe || il.Opcode == IL::CompEq || il.Opcode == IL::CompNe) {
             // std::cout << "Ah ha! I got you! clt" << std::endl;
             IL &il2 = *(iit+1);
 
             if(il2.Opcode == IL::BrZ) {
-                std::cout << "Ah ha! I got you! bz after clt -->";
+                if(CompilationContext::GetInstance()->Debug)
+                    std::cout << "Ah ha! I got you! bz after clt -->";
                 // and the __temp varaible is not used anymore
                 if (il2.Operands.at(0).Equal(&il.Operands.at(0)) &&
                     OperandUsedTwice(f, &il.Operands.at(0))
                 ) {
 
-                    std::cout << "Good to optimize." << std::endl;
-                    std::cout << "Optimizing: " << il2.ToString() << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Good to optimize." << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Optimizing: " << il2.ToString() << std::endl;
                     // changed to:
                     if (il.Opcode == IL::CompLt) {
                         il = *(new IL(IL::BrLe, il.Operands.at(2), il.Operands.at(1), il2.Operands.at(1)));
@@ -102,21 +111,26 @@ int ILOptimizer::OptimizeFunction(ILFunction *f)
                         abort();
                     }
                     il2 = *(new IL(IL::Nop));
-                    std::cout << "Optimized: " << il.ToString() << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Optimized: " << il.ToString() << std::endl;
                     optimized = 1;
                 }
                 else {
-                    std::cout << "Sadly not okay to optimize." << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Sadly not okay to optimize." << std::endl;
                 }
             }
             if(il2.Opcode == IL::BrNz) {
-                std::cout << "Ah ha! I got you! bnz after clt -->";
+                if(CompilationContext::GetInstance()->Debug)
+                    std::cout << "Ah ha! I got you! bnz after clt -->";
                 if (il2.Operands.at(0).Equal(&il.Operands.at(0)) &&
                     OperandUsedTwice(f, &il.Operands.at(0))
                 ) {
 
-                    std::cout << "Good to optimize." << std::endl;
-                    std::cout << "Optimizing: " << il2.ToString() << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Good to optimize." << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Optimizing: " << il2.ToString() << std::endl;
                     // changed to:
                     if (il.Opcode == IL::CompLt) {
                         il = *(new IL(IL::BrLt, il.Operands.at(1), il.Operands.at(2), il2.Operands.at(1)));
@@ -134,11 +148,13 @@ int ILOptimizer::OptimizeFunction(ILFunction *f)
                         abort();
                     }
                     il2 = *(new IL(IL::Nop));
-                    std::cout << "Optimized: " << il.ToString() << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Optimized: " << il.ToString() << std::endl;
                     optimized = 1;
                 }
                 else {
-                    std::cout << "Sadly not okay to optimize." << std::endl;
+                    if(CompilationContext::GetInstance()->Debug)
+                        std::cout << "Sadly not okay to optimize." << std::endl;
                 }
 
             }
@@ -198,17 +214,22 @@ int ILOptimizer::OptimizeFunction(ILFunction *f)
                         il2.Operands.at(0).SymRef->Scope->GetScopeKind() == SymbolScope::Block
 
                     ) {
-                        std::cout << "Ah ha! I got you! mov after some instructions -->";
-                        std::cout << "Good to optimize." << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Ah ha! I got you! mov after some instructions -->";
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Good to optimize." << std::endl;
                         // changed to:
                         il2 = *(new IL(il2.Opcode, il.Operands.at(0), il2.Operands.at(1), il2.Operands.at(2)));
-                        std::cout << "Optimized: " << il2.ToString() << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Optimized: " << il2.ToString() << std::endl;
                         il= *(new IL(IL::Nop));
-                        std::cout << "Optimized: " << il.ToString() << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Optimized: " << il.ToString() << std::endl;
                         optimized = 1;
                     }
                     else {
-                        std::cout << "Sadly not okay to optimize." << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Sadly not okay to optimize." << std::endl;
                         // std::cout << "Equal: " << il2.Operands.at(0).Equal(&il.Operands.at(1)) << std::endl;
                         // std::cout << "TWice: " << OperandUsedTwice(f, &il2.Operands.at(0)) << std::endl;
                     }
@@ -225,17 +246,22 @@ int ILOptimizer::OptimizeFunction(ILFunction *f)
                         // is local
                         il2.Operands.at(0).SymRef->Scope->GetScopeKind() == SymbolScope::Block
                     ) {
-                        std::cout << "Ah ha! I got you! mov after conv instructions -->";
-                        std::cout << "Good to optimize." << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Ah ha! I got you! mov after conv instructions -->";
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Good to optimize." << std::endl;
                         // changed to:
                         il2 = *(new IL(il2.Opcode, il.Operands.at(0), il2.Operands.at(1)));
-                        std::cout << "Optimized: " << il2.ToString() << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Optimized: " << il2.ToString() << std::endl;
                         il= *(new IL(IL::Nop));
-                        std::cout << "Optimized: " << il.ToString() << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Optimized: " << il.ToString() << std::endl;
                         optimized = 1;
                     }
                     else {
-                        std::cout << "Sadly not okay to optimize." << std::endl;
+                        if(CompilationContext::GetInstance()->Debug)
+                            std::cout << "Sadly not okay to optimize." << std::endl;
                         // std::cout << "Equal: " << il2.Operands.at(0).Equal(&il.Operands.at(1)) << std::endl;
                         // std::cout << "TWice: " << OperandUsedTwice(f, &il2.Operands.at(0)) << std::endl;
                     }
@@ -250,9 +276,11 @@ int ILOptimizer::OptimizeFunction(ILFunction *f)
 
     int n_del_nops = DeleteNops(f);
 
-    std::cout << "Optimized: Deleted " << n_del_nops << " Nops." << std::endl;
+    if(CompilationContext::GetInstance()->Debug)
+        std::cout << "Optimized: Deleted " << n_del_nops << " Nops." << std::endl;
 
-    std::cout << "Optimizing: function END" << std::endl;
+    if(CompilationContext::GetInstance()->Debug)
+        std::cout << "Optimizing: function END" << std::endl;
 
     return optimized;
 }

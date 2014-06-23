@@ -385,7 +385,6 @@ int main(int argc, char **argv)
 
     // if it is for -c, return now
     if(CompilationContext::GetInstance()->CompileOnly) {
-        // TODO: dump the variable table
         return 0;
     }
 
@@ -459,7 +458,8 @@ int main(int argc, char **argv)
         mapdump.close();
     }
 
-    printf("Maximum stack frame size: 0x%llX\n", (long long )(context->MaxStackFrame));
+    if(CompilationContext::GetInstance()->Debug)
+        printf("Maximum stack frame size: 0x%llX\n", (long long )(context->MaxStackFrame));
 
     // TODO: Optimize the assembly code
     TargetOptimizer *targetOpt = NULL;

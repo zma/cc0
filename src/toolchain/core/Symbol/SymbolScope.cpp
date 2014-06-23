@@ -1,12 +1,15 @@
-
-#include "SymbolScope.h"
-#include "Symbol.h"
-#include <map>
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
+
+#include <map>
+
+#include <core/Core.h>
 #include <core/Type/Type.h>
 #include <core/CodeDom/Expression.h>
+
+#include "SymbolScope.h"
+#include "Symbol.h"
 
 SymbolScope* SymbolScope::_rootScope = NULL;
 
@@ -22,7 +25,7 @@ SymbolScope::SymbolScope(SymbolScope *parentScope, ScopeKind kind, Expression *a
     this->_kind = kind;
     this->_parentScope = parentScope;
     this->_expression = associatedExpression;
-    
+
     if (SymbolScope::_rootScope == NULL)
     {
         if (parentScope == NULL)
@@ -43,7 +46,7 @@ SymbolScope::SymbolScope(SymbolScope *parentScope, ScopeKind kind, Expression *a
         }
         else
         {
-             this->_parentScope->_childScopes.push_back(this);
+            this->_parentScope->_childScopes.push_back(this);
         }
     }
 
@@ -55,8 +58,8 @@ SymbolScope::~SymbolScope()
     if (_parentScope != NULL)
     {
         for (std::vector<SymbolScope *>::iterator it = _parentScope->_childScopes.begin();
-                it != _parentScope->_childScopes.end();
-                ++it)
+             it != _parentScope->_childScopes.end();
+             ++it)
         {
             SymbolScope *scope = *it;
             if (scope == this)
@@ -149,7 +152,8 @@ void SymbolScope::MakeIndent(int level)
 {
     for (int i = 0; i < level; i++)
     {
-        printf("    ");
+        if(CompilationContext::GetInstance()->Debug)
+            printf("    ");
     }
 }
 
@@ -158,15 +162,18 @@ void SymbolScope::Dump(int level)
     MakeIndent(level);
     switch (_kind)
     {
-        case SymbolScope::Global:
+    case SymbolScope::Global:
+        if(CompilationContext::GetInstance()->Debug)
             printf("Global scope: SIZE: 0x%llX {\n", (long long)_memorySize);
-            break;
-        case SymbolScope::Function:
+        break;
+    case SymbolScope::Function:
+        if(CompilationContext::GetInstance()->Debug)
             printf("Function scope: SIZE: 0x%llX {\n", (long long)_memorySize);
-            break;
-        case SymbolScope::Block:
+        break;
+    case SymbolScope::Block:
+        if(CompilationContext::GetInstance()->Debug)
             printf("Local scope: SIZE: 0x%llX {\n", (long long)_memorySize);
-            break;
+        break;
     }
 
     for (std::map<std::string, Symbol *>::iterator it = _symbolTable.begin(); it != _symbolTable.end(); ++it)
@@ -177,38 +184,44 @@ void SymbolScope::Dump(int level)
         if (sym->Address != 0)
         {
             if (sym->Address >= 0)
-            { 
-                printf("NAME: %s \tTYPE: %s \tOFFSET: +0x%llX\n", sym->Name.c_str(), sym->DeclType->ToString().c_str(), (long long)sym->Address);
+            {
+                if(CompilationContext::GetInstance()->Debug)
+                    printf("NAME: %s \tTYPE: %s \tOFFSET: +0x%llX\n", sym->Name.c_str(), sym->DeclType->ToString().c_str(), (long long)sym->Address);
             }
             else
             {
-                printf("NAME: %s \tTYPE: %s \tOFFSET: -0x%llX\n", sym->Name.c_str(), sym->DeclType->ToString().c_str(), -(long long)(sym->Address));
-                
+                if(CompilationContext::GetInstance()->Debug)
+                    printf("NAME: %s \tTYPE: %s \tOFFSET: -0x%llX\n", sym->Name.c_str(), sym->DeclType->ToString().c_str(), -(long long)(sym->Address));
+
             }
         }
         else
         {
+            if(CompilationContext::GetInstance()->Debug)
                 printf("NAME: %s \tTYPE: %s\n", sym->Name.c_str(), sym->DeclType->ToString().c_str(), (long long)sym->Address);
-            
+
         }
     }
 
     for (std::vector<SymbolScope *>::iterator it = _childScopes.begin();
-            it != _childScopes.end();
-            ++it)
+         it != _childScopes.end();
+         ++it)
     {
         (*it)->Dump(level + 1);
     }
 
     MakeIndent(level);
-    printf("}\n");
+    if(CompilationContext::GetInstance()->Debug)
+        printf("}\n");
 }
 
 void SymbolScope::Dump()
 {
-    printf("====================================================\n");
+    if(CompilationContext::GetInstance()->Debug)
+        printf("====================================================\n");
     Dump(0);
-    printf("====================================================\n");
+    if(CompilationContext::GetInstance()->Debug)
+        printf("====================================================\n");
 }
 
 Expression* SymbolScope::GetAssociatedExpression()
@@ -236,5 +249,3 @@ void SymbolScope::SetAssociatedExpression(Expression* expr)
 {
     _expression = expr;
 }
-
-

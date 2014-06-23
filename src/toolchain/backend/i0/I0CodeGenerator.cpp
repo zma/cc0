@@ -29,7 +29,7 @@ void I0CodeGenerator::EnterProgram(ILProgram* program)
     {
         _staticChain.pop();
     }
-    
+
     _staticChain.push(SymbolScope::GetRootScope());
     _currentText = CompilationContext::GetInstance()->TextStart;
 
@@ -128,7 +128,8 @@ void I0CodeGenerator::ResolveSymbols()
                     CompilationContext::GetInstance()->ReportError(Location(), false, "Cannot resolved symbol \'%s\'.", symRef->Name.c_str());
                 }
                 inst->Operands[i].Address = symbol->Address;
-                std::cout << "Resolving symbol \'" << symbol->Name << "\' -> 0x" << std::uppercase << std::hex << symbol->Address << std::endl;
+                if(CompilationContext::GetInstance()->Debug)
+                    std::cout << "Resolving symbol \'" << symbol->Name << "\' -> 0x" << std::uppercase << std::hex << symbol->Address << std::endl;
                 inst->Operands[i].SymRef = NULL;
             }
         }
@@ -197,7 +198,7 @@ void I0CodeGenerator::GenerateSpawn0()
     sym->Address = _currentText;
 
     I0Instruction *inst;
-    
+
     inst = new I0Instruction();
     inst->OpCode = I0Instruction::ADD;
     inst->Attribute = I0Instruction::Signed64;
@@ -239,18 +240,18 @@ void I0CodeGenerator::GenerateSpawn0()
     inst->Operands[0] = I0Instruction::I0Operand(I0Instruction::Immediate, (int64_t)0, I0Instruction::ConvSigned64);
     inst->Operands[1] = I0Instruction::I0Operand(I0Instruction::Indirect, STACK_POINTER, I0Instruction::ConvSigned64);
     Emit(inst);
-    
+
     int64_t *pRetAddr = &inst->Operands[0].Address;
-    
+
     inst = new I0Instruction();
     inst->OpCode = I0Instruction::B;
     inst->JumpMode = I0Instruction::JI;
     inst->RelativeJump = false;
     inst->Operands[0] = I0Instruction::I0Operand(I0Instruction::Direct, GENERAL_REG_2, I0Instruction::ConvSigned64);
     Emit(inst);
-    
+
     *pRetAddr = _currentText;
-    
+
     Emit("exit:c");
 }
 
@@ -538,7 +539,7 @@ void I0CodeGenerator::GenerateComparason(IL* il, I0Instruction::BJumpMode mode, 
 
     Emit(einst);
     pEL = &(einst->Operands[0].Address);
-    
+
     *pTL = _currentText;
 
     I0Instruction *tinst = new I0Instruction();
@@ -847,19 +848,19 @@ void I0CodeGenerator::VisitCall(IL* il)
     Emit(allocInst);
 
     int64_t stackOffset = 0; //retSiz;  PointerType::PointerSize;
-    
+
     I0Instruction *retAddrInst = new I0Instruction();
     retAddrInst->OpCode = I0Instruction::CONV;
     retAddrInst->Operands[0] = I0Instruction::I0Operand(I0Instruction::Immediate, (int64_t)0, I0Instruction::ConvSigned64);
     retAddrInst->Operands[1] = I0Instruction::I0Operand(I0Instruction::BaseDisplacement, STACK_POINTER, stackOffset, I0Instruction::ConvSigned64);
     Emit(retAddrInst);
-    
+
     stackOffset += PointerType::PointerSize;
-    
-    
+
+
     int64_t *pRetAddr = &(retAddrInst->Operands[0].IntValue);
 
-    
+
     // Allocate space for return value
     stackOffset += retSize;
 
@@ -885,8 +886,8 @@ void I0CodeGenerator::VisitCall(IL* il)
     Emit(brInst);
 
     *pRetAddr = _currentText;
-    
-    
+
+
     // Get the return value
     if (il->Operands[1].OperandKind != IL::Empty)
     {
@@ -896,7 +897,7 @@ void I0CodeGenerator::VisitCall(IL* il)
         GenerateI0Operand(il->Operands[1], getRetvInst, 1);
         Emit(getRetvInst);
     }
-    
+
     I0Instruction *deallocInst = new I0Instruction();
     deallocInst->OpCode = I0Instruction::ADD;
     deallocInst->Attribute = I0Instruction::Signed64;
@@ -1022,10 +1023,10 @@ void I0CodeGenerator::VisitLdelem(IL* il)
 
     I0Instruction *instLoad = new I0Instruction();
     instLoad->OpCode = I0Instruction::CONV;
-    
+
     GenerateI0Operand(il->Operands[0], instLoad, 1);
     // instLoad->Operands[0] = I0Instruction::I0Operand(I0Instruction::Indirect, GENERAL_REG_2, I0Instruction::ConvSigned64);
-    instLoad->Operands[0] = I0Instruction::I0Operand(I0Instruction::Indirect, GENERAL_REG_2, 
+    instLoad->Operands[0] = I0Instruction::I0Operand(I0Instruction::Indirect, GENERAL_REG_2,
                                                          GetConvOperandAttribute(il->Operands[0].OperandType));
     Emit(instLoad);
 
@@ -1490,7 +1491,7 @@ void I0CodeGenerator::VisitLda(IL* il)
 
         I0Instruction *inst = new I0Instruction();
         inst->OpCode = I0Instruction::ADD;
-        // bugfix by zma. 
+        // bugfix by zma.
         inst->Attribute = I0Instruction::Signed64;
         inst->Operands[0] = I0Instruction::I0Operand(I0Instruction::Direct, FRAME_POINTER, I0Instruction::ConvSigned64);
         inst->Operands[1] = I0Instruction::I0Operand(I0Instruction::Immediate, symbol->Address, I0Instruction::ConvSigned64);
@@ -1590,6 +1591,3 @@ int64_t I0CodeGenerator::GetOperandSize(IL::ILOperandType optype, int64_t align)
     elementSize = ROUND_UP(elementSize, align);
     return elementSize;
 }
-
-
-
