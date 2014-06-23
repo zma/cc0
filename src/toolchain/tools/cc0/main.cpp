@@ -77,7 +77,7 @@ void print_usage(char *cmd)
 "cc0 - A c0 compiler which generates i0 code.\n"
 "\n"
 "Usage: \n"
-"    cc0 [-g|--debug] [-c] [-h|--help]\n"
+"    cc0 [-g|--debug] [-c] [-Dopts] [-Idirs] [-h|--help]\n"
 "        infile -o outfile\n"
 "\n"
 "\n"
@@ -86,6 +86,10 @@ void print_usage(char *cmd)
 "        Output debugging information.\n"
 "-c\n"
 "        Compile only.\n"
+"-Dopts\n"
+"        Pass -Dopts to the preprocessor.\n"
+"-Ddirs\n"
+"        Pass -Idirs to the preprocessor.\n"
 "\n"
     );
 
@@ -95,6 +99,7 @@ void print_usage(char *cmd)
 int main(int argc, char **argv)
 {
     bool codeTypeDefined = false;
+    std::string cpp_args = "";
 
     CompilationContext *context = CompilationContext::GetInstance();
 
@@ -156,14 +161,28 @@ int main(int argc, char **argv)
             codeTypeDefined = true;
         }
         */
+        else if ( strcmp(argv[i], "-I") == 0 && i + 1 < argc ) {
+            cpp_args += " " + std::string(argv[i]) + std::string(argv[i+1]);
+            ++i;
+        }
+        else if ( strlen(argv[i]) > 2 && strncmp(argv[i], "-I", 2) == 0 ) {
+            cpp_args += " " + std::string(argv[i]);
+        }
+        else if ( strlen(argv[i]) > 2 && strncmp(argv[i], "-D", 2) == 0 ) {
+            cpp_args += " " + std::string(argv[i]);
+        }
         else if ( (strcmp(argv[i], "--help") == 0) || strcmp(argv[i], "-h") == 0 )
         {
             print_usage(argv[0]);
             return 0;
         }
-        else
+        else if ( strncmp(argv[i], "-", 1) != 0)
         {
             CompilationContext::GetInstance()->InputFiles.push_back(argv[i]);
+        }
+        else {
+            std::cout << "Unsupported option: " + std::string(argv[i]) << std::endl;
+            return -1;
         }
     }
 
@@ -193,11 +212,15 @@ int main(int argc, char **argv)
             sprintf(tmpFileName, "%s.tmp", inputFile.c_str());
 
             // tmpnam(tmpFileName);
-            printf("temp file is: %s\n", tmpFileName);
+            if(CompilationContext::GetInstance()->Debug)
+                printf("temp file is: %s\n", tmpFileName);
 
             context->CurrentFileName = inputFile;
 
-            std::string cmdline = "cpp " + inputFile + " -o " + tmpFileName;
+            std::string cmdline = "cpp --sysroot ." + cpp_args + " " + inputFile + " -o " + tmpFileName;
+            if(CompilationContext::GetInstance()->Debug)
+                std::cout << "Preprocessing with cmd \"" + cmdline << "\"" << std::endl;
+
             if(system(cmdline.c_str()) != 0)
             {
                return -1;
