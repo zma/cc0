@@ -5,6 +5,9 @@
 #include <stdint.h>
 
 #include "SymbolAddress.h"
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/string.hpp>
 
 class Expression;
 class SymbolScope;
@@ -13,8 +16,22 @@ class SemanticTreeNode;
 class Type;
 class FunctionExpression;
 
-struct Symbol
+class Symbol
 {   
+private:
+	Symbol();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_NVP(Name);
+		ar & BOOST_SERIALIZATION_NVP(DeclType);
+		ar & BOOST_SERIALIZATION_NVP(Scope);
+		ar & BOOST_SERIALIZATION_NVP(DeclSource);
+		ar & BOOST_SERIALIZATION_NVP(Address);
+		ar & BOOST_SERIALIZATION_NVP(Kind);
+	}
+public:
     enum SymbolKind
     {
         ObjectName,

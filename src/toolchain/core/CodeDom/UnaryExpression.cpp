@@ -5,6 +5,10 @@
 #include <core/Type/PointerType.h>
 #include <core/Type/BooleanType.h>
 
+UnaryExpression::UnaryExpression(): Expression(Expression::Nop), Operand(NULL)
+{
+}
+
 UnaryExpression::UnaryExpression(Expression::ExpressionAction nodeType, Expression* operand)
         : Expression(nodeType)
 {

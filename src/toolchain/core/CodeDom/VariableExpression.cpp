@@ -5,6 +5,10 @@
 #include "ConstantExpression.h"
 #include <core/Misc/ConstantValue.h>
 
+VariableExpression::VariableExpression(): Expression(Expression::Variable), _symbol(NULL)
+{
+}
+
 VariableExpression::VariableExpression(Symbol* symbol)
 : Expression(Expression::Variable)
 {

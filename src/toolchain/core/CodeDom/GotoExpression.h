@@ -3,9 +3,22 @@
 
 #include "Expression.h"
 #include <string>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/string.hpp>
 
 class GotoExpression : public Expression
 {
+private:
+	GotoExpression();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Expression);
+		ar & BOOST_SERIALIZATION_NVP(_targetType);
+		ar & BOOST_SERIALIZATION_NVP(_labelName);
+	}
 public:
     enum GotoTargetType
     {

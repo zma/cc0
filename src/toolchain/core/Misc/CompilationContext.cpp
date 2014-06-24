@@ -16,7 +16,7 @@ CompilationContext* CompilationContext::GetInstance()
     return _instance;
 }
 
-CompilationContext::CompilationContext()
+CompilationContext::CompilationContext() :TextStart(0), DataStart(0),RDataStart(0), BssStart(0), CodeDom(NULL), IL(NULL), Target(NULL), CurrentParser(NULL)
 {
     NumErrors = 0;
     NumWarnings = 0;

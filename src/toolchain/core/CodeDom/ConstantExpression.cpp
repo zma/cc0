@@ -6,6 +6,10 @@
 #include <core/Misc/ConstantValue.h>
 //TODO: Finish it
 
+ConstantExpression::ConstantExpression():Expression(Expression::Constant), _value(NULL)
+{
+}
+
 ConstantExpression::ConstantExpression(ConstantValue *value)
         : Expression(Expression::Constant)
 {

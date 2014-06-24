@@ -3,10 +3,18 @@
 
 #include <string>
 #include <stdint.h>
-
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 class Type
 {
+private:
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_NVP(_specifiers);
+	}
 public:
     enum TypeSpecifier
     {

@@ -2,6 +2,9 @@
 #include "ExpressionVisitor.h"
 #include <core/Type/VoidType.h>
 
+LoopExpression::LoopExpression():Expression(Expression::Loop), _initializingExpression(NULL), _conditionExpression(NULL), _incrementExpression(NULL), _bodyExpression(NULL), _checkCondAfter(false)
+{
+}
 
 LoopExpression::LoopExpression(Expression* init, Expression* cond, Expression* incr, Expression* body, bool checkAfter)
     :Expression(Expression::Loop)

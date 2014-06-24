@@ -2,7 +2,9 @@
 #include "FunctionType.h"
 #include <core/Symbol/Declaration.h>
 
-
+FunctionType::FunctionType() :  _parameters(NULL), _returnType(NULL)
+{
+}
 
 FunctionType::FunctionType(Type* returnType, std::vector< Declaration* >* parameters)
 {
@@ -18,7 +20,7 @@ FunctionType::~FunctionType()
 std::string FunctionType::ToString()
 {
     std::string str = "FUNCTION (";
-    for (int i = 0; i < _parameters->size(); i++)
+    for (size_t i = 0; i < _parameters->size(); i++)
     {
         Declaration *decl = (*_parameters)[i];
         std::string name = decl->GetName();
@@ -48,12 +50,12 @@ int64_t FunctionType::GetSize()
 
 
 
-bool FunctionType::CanExplicitlyConvertTo(Type* other)
+bool FunctionType::CanExplicitlyConvertTo(Type*)
 {
     return false;
 }
 
-bool FunctionType::CanImplicitlyConvertTo(Type* other)
+bool FunctionType::CanImplicitlyConvertTo(Type*)
 {
     return false;
 }

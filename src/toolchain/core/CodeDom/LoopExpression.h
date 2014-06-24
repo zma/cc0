@@ -2,6 +2,8 @@
 #define LOOPEXPRESSION_H
 
 #include "Expression.h"
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 /*
  * 
@@ -32,6 +34,19 @@
 
 class LoopExpression : public Expression
 {
+private:
+	LoopExpression();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Expression);
+		ar & BOOST_SERIALIZATION_NVP(_initializingExpression);
+		ar & BOOST_SERIALIZATION_NVP(_conditionExpression);
+		ar & BOOST_SERIALIZATION_NVP(_incrementExpression);
+		ar & BOOST_SERIALIZATION_NVP(_bodyExpression);
+		ar & BOOST_SERIALIZATION_NVP(_checkCondAfter);
+	}
 private:
     Expression *_initializingExpression;
     Expression *_conditionExpression;

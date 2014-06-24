@@ -7,11 +7,21 @@
 #include <core/Core.h>
 #include <core/Type/Type.h>
 #include <core/CodeDom/Expression.h>
-
+#include "core/IL/ILProgram.h"
 #include "SymbolScope.h"
 #include "Symbol.h"
 
 SymbolScope* SymbolScope::_rootScope = NULL;
+
+void SymbolScope::__SetRootScopt(ILProgram* il_program)
+{
+	_rootScope = il_program->Scope;
+}
+
+
+SymbolScope::SymbolScope():	_parentScope(NULL), _kind(Global), _expression(NULL), _memorySize(0)
+{
+}
 
 SymbolScope* SymbolScope::GetRootScope()
 {
@@ -19,7 +29,7 @@ SymbolScope* SymbolScope::GetRootScope()
 }
 
 
-SymbolScope::SymbolScope(SymbolScope *parentScope, ScopeKind kind, Expression *associatedExpression)
+SymbolScope::SymbolScope(SymbolScope *parentScope, ScopeKind kind, Expression *associatedExpression):_memorySize(0)
 {
     assert(parentScope != this);
     this->_kind = kind;
@@ -248,4 +258,8 @@ void SymbolScope::SetMemorySize(int64_t size)
 void SymbolScope::SetAssociatedExpression(Expression* expr)
 {
     _expression = expr;
+}
+
+void SymbolScope::__SetParentScope(SymbolScope* __parent){
+	_parentScope = __parent;
 }

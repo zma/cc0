@@ -4,11 +4,28 @@
 #include <core/Type/Type.h>
 #include <stdint.h>
 #include <string>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/string.hpp>
 
 class ConstantType;
 
 class ConstantValue
 {
+private:
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_NVP(_declType);
+		ar & BOOST_SERIALIZATION_NVP(_resolvedType);
+		ar & BOOST_SERIALIZATION_NVP(_boolValue);
+		ar & BOOST_SERIALIZATION_NVP(_intValue);
+		ar & BOOST_SERIALIZATION_NVP(_uintValue);
+		ar & BOOST_SERIALIZATION_NVP(_charValue);
+		ar & BOOST_SERIALIZATION_NVP(_stringValue);
+		ar & BOOST_SERIALIZATION_NVP(_doubleValue);
+	}
 private:
     friend class ConstantType;
     Type* _declType;

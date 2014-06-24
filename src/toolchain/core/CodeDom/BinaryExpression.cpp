@@ -5,6 +5,10 @@
 #include <core/Type/ArrayType.h>
 #include <core/Type/PointerType.h>
 
+BinaryExpression::BinaryExpression():Expression(Expression::Nop), _left(NULL), _right(NULL)
+{
+}
+
 BinaryExpression::BinaryExpression(ExpressionAction nodeType,  Expression *left, Expression *right)
         : Expression(nodeType)
 {

@@ -2,6 +2,11 @@
 #include "CallExpression.h"
 #include "ExpressionVisitor.h"
 #include <core/Type/FunctionType.h>
+
+CallExpression::CallExpression():Expression(Expression::Call), _target(NULL)
+{
+}
+
 CallExpression::CallExpression(Expression *target)
 :Expression(Expression::Call)
 {

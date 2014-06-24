@@ -1,9 +1,20 @@
 #ifndef POINTERTYPE_H
 #define POINTERTYPE_H
 #include "Type.h"
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 class PointerType: public Type
 {
+private:
+	PointerType();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Type);
+		ar & BOOST_SERIALIZATION_NVP(_underlyingType);
+	}
 public:
     // TODO: Make it more portable
     static const int PointerSize = 8;

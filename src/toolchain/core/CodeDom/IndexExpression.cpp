@@ -9,6 +9,10 @@
 #include <core/Misc/ConstantValue.h>
 #include <typeinfo>
 
+IndexExpression::IndexExpression():Expression(Expression::ArrayIndex), Container(NULL), Index(NULL)
+{
+}
+
 Type* IndexExpression::GetType()
 {
     Type *containerType =  Container->GetType();

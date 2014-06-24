@@ -1,6 +1,10 @@
 #include "AssignExpression.h"
 #include "ExpressionVisitor.h"
 
+AssignExpression::AssignExpression():Expression(Expression::Assign),_additionOperator(Expression::Nop),_target(NULL), _source(NULL)
+{
+}
+
 Type* AssignExpression::GetType()
 {
     return _target->GetType();

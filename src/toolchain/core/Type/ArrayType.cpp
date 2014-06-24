@@ -4,7 +4,12 @@
 #include "PointerType.h"
 #include <stdio.h>
 
+ArrayType::ArrayType(): _elementType(NULL), _size(0)
+{
+}
+
 ArrayType::ArrayType(Type* elementType, int64_t size)
+
 {
     _elementType = elementType;
     _size = size;

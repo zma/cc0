@@ -18,12 +18,12 @@ std::string VoidType::ToString()
 }
 
 
-bool VoidType::CanExplicitlyConvertTo(Type* other)
+bool VoidType::CanExplicitlyConvertTo(Type*)
 {
     return false;
 }
 
-bool VoidType::CanImplicitlyConvertTo(Type* other)
+bool VoidType::CanImplicitlyConvertTo(Type*)
 {
     return false;
 }

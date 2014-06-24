@@ -4,10 +4,22 @@
 #include "Expression.h"
 #include <string>
 #include <core/Type/Type.h>
+#include "core/Misc/ConstantValue.h"
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 class ConstantValue;
 class ConstantExpression : public Expression
 {
+private:
+	ConstantExpression();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Expression);
+		ar & BOOST_SERIALIZATION_NVP(_value);
+	}
 private:
     ConstantValue *_value;
 public:

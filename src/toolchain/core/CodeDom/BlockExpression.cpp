@@ -5,9 +5,10 @@
 #include <core/Type/VoidType.h>
 
 BlockExpression::BlockExpression()
-        : Expression(Expression::Block)
+        : Expression(Expression::Block), _scope(NULL)
 {
     _expressions = new std::vector<Expression *>();
+    //FIXME: memory leak!
 }
 
 BlockExpression::~BlockExpression()

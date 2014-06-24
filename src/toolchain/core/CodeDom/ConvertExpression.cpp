@@ -2,6 +2,10 @@
 #include "ConvertExpression.h"
 #include "ExpressionVisitor.h"
 
+ConvertExpression::ConvertExpression():Expression(Expression::Convert), _targetType(NULL), _source(NULL)
+{
+}
+
 ConvertExpression::ConvertExpression(Type* targetType, Expression* sourceExpression)
 : Expression(Expression::Convert)
 {

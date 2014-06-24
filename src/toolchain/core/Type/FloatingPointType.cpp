@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <typeinfo>
 #include "IntegerType.h"
+
+FloatingPointType::FloatingPointType() : _legnth(0)
+{}
+
 std::string FloatingPointType::ToString()
 {
     switch (_legnth)

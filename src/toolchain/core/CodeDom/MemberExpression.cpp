@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <assert.h>
 
+MemberExpression::MemberExpression(): Expression(Expression::Member), Container(NULL)
+{
+}
+
 Type* MemberExpression::GetType()
 {
     Type *containerType = Container->GetType();

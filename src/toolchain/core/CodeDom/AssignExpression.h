@@ -2,10 +2,22 @@
 #define ASSIGNEXPRESSION_H
 
 #include "Expression.h"
-
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 class AssignExpression : public Expression
 {
+private:
+	AssignExpression();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Expression);
+		ar & BOOST_SERIALIZATION_NVP(_additionOperator);
+		ar & BOOST_SERIALIZATION_NVP(_target);
+		ar & BOOST_SERIALIZATION_NVP(_source);
+	}
 private:
     Expression::ExpressionAction _additionOperator;
     Expression *_target;

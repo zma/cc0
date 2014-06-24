@@ -52,4 +52,5 @@ IL/ILClass.cpp IL/ILProgram.cpp Pass/AssemblyParser.cpp Pass/CodeGenerator.cpp P
     CodeDom/CallExpression.cpp
     Pass/ConstantPropagation.cpp
     Pass/TypeDeduction.cpp
+    Misc/FilePath.cpp
 )

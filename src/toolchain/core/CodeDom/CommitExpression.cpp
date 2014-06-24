@@ -2,6 +2,10 @@
 #include <core/Type/VoidType.h>
 #include "ExpressionVisitor.h"
 
+CommitExpression::CommitExpression():Expression(Expression::Commit), _deleteWatcher(false)
+{
+}
+
 CommitExpression::CommitExpression(bool deleteWatcher)
     :Expression(Expression::Commit)
 {

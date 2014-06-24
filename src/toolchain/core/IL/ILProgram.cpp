@@ -1,6 +1,6 @@
 #include "ILProgram.h"
 
-ILProgram::ILProgram()
+ILProgram::ILProgram():Scope(NULL)
 {
 }
 

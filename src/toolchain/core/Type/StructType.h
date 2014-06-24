@@ -2,12 +2,25 @@
 #define STRUCTTYPE_H
 #include "Type.h"
 #include <vector>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/string.hpp>
 
 class Symbol;
 class Declaration;
 
 class StructType: public Type
 {
+private:
+	StructType();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Type);
+		ar & BOOST_SERIALIZATION_NVP(_name);
+		ar & BOOST_SERIALIZATION_NVP(_layoutMode);
+		ar & BOOST_SERIALIZATION_NVP(_fields);
+	}
 public:
     enum LayoutMode
     {

@@ -1,9 +1,20 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 #include <string>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/nvp.hpp>
 
 struct Location
 {
+private:
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_NVP(FileName);
+		ar & BOOST_SERIALIZATION_NVP(Line);
+		ar & BOOST_SERIALIZATION_NVP(Column);
+	}
 public:
     std::string FileName;
     int Line;

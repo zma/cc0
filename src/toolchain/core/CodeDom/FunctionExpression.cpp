@@ -6,8 +6,12 @@
 #include <core/Type/FunctionType.h>
 #include <core/Symbol/Symbol.h>
 
+FunctionExpression::FunctionExpression():Expression(Expression::Function), _body(NULL), _symbol(NULL), _functionScope(NULL)
+{
+}
+
 FunctionExpression::FunctionExpression(Symbol *symbol, SymbolScope *functionScope)
-        : Expression(Expression::Function)
+        : Expression(Expression::Function), _body(NULL)
 {
 
     _symbol = symbol;

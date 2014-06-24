@@ -1,7 +1,7 @@
 
 #include "Type.h"
 
-Type::Type()
+Type::Type() : _specifiers(None)
 {
 }
 

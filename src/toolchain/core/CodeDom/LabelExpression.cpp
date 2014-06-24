@@ -11,6 +11,10 @@
 
 unsigned int LabelExpression::_labelID = 0;
 
+LabelExpression::LabelExpression():Expression(Expression::Label), _symbol(NULL)
+{
+}
+
 Type* LabelExpression::GetType()
 {
     //FIXME: It cannot be the evlautated type of a block

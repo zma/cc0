@@ -2,6 +2,7 @@
 #define NEWRUNNEREXPRESSION_H
 
 #include <core/CodeDom/Expression.h>
+#include <boost/serialization/vector.hpp>
 
 // struct AddressRange
 // {
@@ -17,6 +18,19 @@
 
 class NewRunnerExpression : public Expression
 {
+private:
+	NewRunnerExpression();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Expression);
+		ar & BOOST_SERIALIZATION_NVP(_target);
+		ar & BOOST_SERIALIZATION_NVP(_arguments);
+		ar & BOOST_SERIALIZATION_NVP(_usingList);
+		ar & BOOST_SERIALIZATION_NVP(_watchList);
+		ar & BOOST_SERIALIZATION_NVP(_space);
+	}
 private:
     Expression *_target;
     std::vector<Expression *> *_arguments;

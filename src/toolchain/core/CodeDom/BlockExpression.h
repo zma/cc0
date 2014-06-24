@@ -3,9 +3,19 @@
 #include "Expression.h"
 
 #include <vector>
+#include <boost/serialization/vector.hpp>
 
 class BlockExpression : public Expression
 {
+private:
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Expression);
+		ar & BOOST_SERIALIZATION_NVP(_expressions);
+		ar & BOOST_SERIALIZATION_NVP(_scope);
+	}
 private:
     std::vector<Expression *> *_expressions;
 public:

@@ -2,9 +2,20 @@
 #define FLOATINGPOINTTYPE_H
 
 #include <core/Type/Type.h>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 class FloatingPointType : public Type
 {
+private:
+	FloatingPointType();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Type);
+		ar & BOOST_SERIALIZATION_NVP(_legnth);
+	}
 private:
     int64_t _legnth;
 public:

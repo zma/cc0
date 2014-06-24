@@ -5,7 +5,12 @@
 #include <stdlib.h>
 #include <antlr3commontoken.h>
 #include <antlr3parser.h>
-Expression::Expression(ExpressionAction nodeType)
+
+Expression::Expression() : _parent(NULL), _nodeType(Nop), _scope(NULL)
+{
+}
+
+Expression::Expression(ExpressionAction nodeType):_parent(NULL)
 {
     this->_nodeType = nodeType;
     _scope = NULL;

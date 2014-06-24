@@ -4,12 +4,21 @@
 #include "Expression.h"
 #include <vector>
 #include <core/Symbol/SymbolScope.h>
+#include <boost/serialization/vector.hpp>
 
 class SymbolScope;
 class FunctionExpression;
 
 class ProgramExpression : public Expression
 {
+private:
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Expression);
+		ar & BOOST_SERIALIZATION_NVP(_functions);
+	}
 private:
     std::vector<Expression *> _functions;
 public:

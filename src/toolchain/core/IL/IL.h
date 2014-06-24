@@ -6,6 +6,7 @@
 #include <map>
 #include <typeinfo>
 #include <core/Symbol/SymbolRef.h>
+#include <boost/serialization/vector.hpp>
 
 class Type;
 class SymbolRef;
@@ -17,6 +18,20 @@ class ConstantValue;
 
 class IL
 {
+private:
+	IL();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_NVP(Opcode);
+		ar & BOOST_SERIALIZATION_NVP(Operands);
+		if(_tags.size())
+		{
+			::std::cerr<<"IL _tags is not empty!\n";
+			exit(-1);
+		}
+	}
 public:
     enum ILOpcode 
     {
@@ -105,6 +120,20 @@ public:
     };
     struct ILOperand
     {
+    private:
+    	friend class ::boost::serialization::access;
+    	template<class A>
+    	void serialize(A& ar, const unsigned int)
+    	{
+    		ar & BOOST_SERIALIZATION_NVP(OperandKind);
+    		ar & BOOST_SERIALIZATION_NVP(OperandType);
+    		ar & BOOST_SERIALIZATION_NVP(IValue);
+    		ar & BOOST_SERIALIZATION_NVP(UValue);
+    		ar & BOOST_SERIALIZATION_NVP(RValue);
+    		ar & BOOST_SERIALIZATION_NVP(SValue);
+    		ar & BOOST_SERIALIZATION_NVP(SymRef);
+    		ar & BOOST_SERIALIZATION_NVP(ObjectType);
+    	}
     public:
         ILOperand();
         ILOperand(ILOperandKind kind, ILOperandType type, intmax_t v);

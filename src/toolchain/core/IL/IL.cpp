@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <assert.h>
 
+IL::IL():Opcode(Nop)
+{
+}
+
 IL::IL(IL::ILOpcode opcode)
 {
     this->Opcode = opcode;

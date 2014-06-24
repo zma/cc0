@@ -4,6 +4,10 @@
 #include "PointerType.h"
 #include "FloatingPointType.h"
 
+IntegerType::IntegerType():_legnth(0), _signedType(false)
+{
+}
+
 IntegerType::IntegerType(int64_t length, bool signedType)
 {
     _legnth = length;

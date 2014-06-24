@@ -3,10 +3,11 @@
 #include "ExpressionVisitor.h"
 
 
+
 ConditionalExpression::ConditionalExpression()
     :Expression(Expression::Conditional)
 {
-    _conditionalBranches = new std::map<Expression *, Expression *>();
+    _conditionalBranches = new std::map<Expression *, Expression *>(); //FIXME: memory leak!
     _defaultBranch = NULL;
     _goThrough = false;
 }

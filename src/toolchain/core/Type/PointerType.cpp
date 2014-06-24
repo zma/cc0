@@ -3,6 +3,10 @@
 #include "VoidType.h"
 #include <typeinfo>
 
+PointerType::PointerType():_underlyingType(NULL)
+{
+}
+
 PointerType::PointerType(Type *underlyingType)
 {
     this->_underlyingType = underlyingType;

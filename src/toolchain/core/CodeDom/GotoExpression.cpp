@@ -4,6 +4,10 @@
 #include "ExpressionVisitor.h"
 #include <core/Type/VoidType.h>
 
+GotoExpression::GotoExpression():Expression(Expression::Goto), _targetType(NamedLabel)
+{
+}
+
 GotoExpression::GotoExpression(GotoExpression::GotoTargetType targetType)
         : Expression(Expression::Goto)
 {
@@ -24,7 +28,7 @@ GotoExpression::~GotoExpression()
 
 Type* GotoExpression::GetType()
 {
-    return new VoidType();;
+    return new VoidType();
 }
 
 

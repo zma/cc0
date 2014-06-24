@@ -2,12 +2,25 @@
 
 #include <string>
 #include <stdint.h>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/string.hpp>
 
 
 class Type;
 
 class Declaration
 {
+private:
+	Declaration();
+	friend class ::boost::serialization::access;
+	template<class A>
+	void serialize(A& ar, const unsigned int)
+	{
+		ar & BOOST_SERIALIZATION_NVP(_type);
+		ar & BOOST_SERIALIZATION_NVP(_name);
+		ar & BOOST_SERIALIZATION_NVP(_offset);
+	}
 private:
     Type *_type;
     std::string _name;

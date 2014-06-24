@@ -2,7 +2,11 @@
 #include "Symbol.h"
 #include <stdlib.h>
 
-Symbol::Symbol(std::string name, Type* declType, SymbolKind kind)
+Symbol::Symbol() : DeclType(NULL), Scope(NULL), DeclSource(NULL), Address(0), Kind(ObjectName)
+{
+}
+
+Symbol::Symbol(std::string name, Type* declType, SymbolKind kind) : Scope(NULL), DeclSource(NULL)
 {
     this->Name = name;
     this->DeclType = declType;

@@ -3,6 +3,10 @@
 #include <core/Symbol/Declaration.h>
 #include <core/Symbol/Symbol.h>
 
+StructType::StructType():_layoutMode(Sequential)
+{
+}
+
 StructType::StructType(LayoutMode layout)
 {
     _layoutMode = layout;
