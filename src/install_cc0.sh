@@ -3,7 +3,7 @@
 dir=$(pwd)
 
 sudo yum -y groupinstall 'Development tools'
-sudo yum -y install cmake glibc-static libstdc++-static boost boost-serialization boost-devel gcc-c++ tar wget
+sudo yum -y install cmake glibc-static libstdc++-static antlr3 boost boost-serialization boost-static boost-devel gcc-c++ tar wget
 
 if [ $? -eq 0 ]; then
 	if [ ! -f ./libantlr3c-3.4.tar.gz ]; then
