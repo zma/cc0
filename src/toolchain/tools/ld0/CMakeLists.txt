@@ -6,7 +6,7 @@ add_executable(ld0
 
 add_dependencies(ld0 core i0 disa flat langc)
 
-target_link_libraries(ld0 core i0 disa flat langc boost_serialization)
+target_link_libraries(ld0 core i0 disa flat langc boost_serialization pthread)
 
 install(TARGETS ld0 DESTINATION bin)
 
