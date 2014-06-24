@@ -9,8 +9,6 @@
 
 #include <core/Core.h>
 #include <frontend/c/CSourceParser.h>
-// #include <backend/disa/DisaCodeGenerator.h>
-// #include <backend/disa/DisaAssemblyParser.h>
 #include <backend/i0/I0CodeGenerator.h>
 #include <binary/elf/ElfFileWriter.h>
 #include <binary/flat/FlatFileWriter.h>
@@ -86,10 +84,10 @@ void print_usage(char *cmd)
 "        Output debugging information.\n"
 "-c\n"
 "        Compile only.\n"
-"-Dopts\n"
-"        Pass -Dopts to the preprocessor.\n"
-"-Ddirs\n"
-"        Pass -Idirs to the preprocessor.\n"
+"-Dmacro...\n"
+"        Pass -Dmacro... to the preprocessor.\n"
+"-Idir...\n"
+"        Pass -Idir... to the preprocessor.\n"
 "\n"
     );
 
@@ -390,10 +388,6 @@ int main(int argc, char **argv)
 
     CodeGenerator *codegen = NULL;
     //Generate assembly code from IL
-    /* if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_DISA) {
-        //Generate DISA assembly code from IL
-        codegen = new DisaCodeGenerator();
-        } else */
     if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_I0) {
         codegen = new I0CodeGenerator();
     } else {
@@ -411,10 +405,6 @@ int main(int argc, char **argv)
         if(fileExt == "s")
         {
             SourceParser *parser = NULL;
-            /* if (CompilationContext::GetInstance()->CodeType == CODE_TYPE_DISA) {
-                parser = new DisaAssemblyParser();
-            } else
-            */
             {
                 // TODO: support i0 assembly
                 printf(".s file is not supported for i0.\n");
