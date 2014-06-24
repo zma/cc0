@@ -1,0 +1,18 @@
+// cc0 -I./libi0 fastexp.co -o fastexp.bin
+#include <stdio.h>
+#include <math.h>
+#include <fastexp.h>
+
+void main()
+{
+    double d;
+    double e;
+
+    for (d = 0.0; d < 100.0; d = d + 1.0) {
+        e = exp_remez13_05_05(d);
+        put4('e','x','p','(');putdouble(d);put4(')','-','-','>');
+        putdouble(e);wrln();
+    }
+
+    commit;
+}

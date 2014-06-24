@@ -1,0 +1,41 @@
+#include "libi0/stdio.h"
+
+void main()
+{
+    double d;
+    long rt;
+
+//    rt = 20;
+//    output_long(rt);wrln();
+//    d = (double)rt;
+//    output_double((double)rt); wrln();
+//    wrln();
+
+    output_double(1.8899281111882238);wrln();
+    output_double(-1.8899281111882238);wrln();
+    output_double(-0.8899281111882238);wrln();
+    output_double(0.8899281111882238);wrln();
+    output_double(0.09281111882238E-2);wrln();
+    output_double(-0.0009281111882238);wrln();
+
+    wrln();
+
+    rt = input_double(&d);
+    output_double(d);wrln();
+    rt = input_double(&d);
+    output_double(d);wrln();
+    rt = input_double(&d);
+    output_double(d);wrln();
+    rt = input_double(&d);
+    output_double(d);wrln();
+    rt = input_double(&d);
+    output_double(d);wrln();
+    rt = input_double(&d);
+    output_double(d);wrln();
+
+    // expect -1
+    rt = input_double(&d);
+    output_long(rt);wrln();
+
+    commit;
+}

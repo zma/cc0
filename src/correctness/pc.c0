@@ -1,0 +1,195 @@
+#include "libi0/stddef.h"
+#include "libi0/stdio.h"
+#include "libi0/pc.h"
+
+#define SEG_SIZE (50*1024*1024)
+
+void runner_read_new()
+{
+    long *pc_addr;
+    long *pc_addr_old;
+
+    put8(C_n,'r',':','r','d','n','w',C_n);
+
+    pc_addr_old = (long*)PHASING_CACHE_ADDR;
+    pc_addr = (long*)(PHASING_CACHE_ADDR + SEG_SIZE);
+
+    pc_addr[0] = 12;
+    pc_addr[1] = 12;
+    pc_addr[SEG_SIZE/sizeof_long-1] = 12;
+
+    pc_get(0, pc_addr_old, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','0',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    pc_get(1, pc_addr_old, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','1',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    pc_get(0, pc_addr_old, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','0',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    put8('a','f','t','e','r','s','y','n');
+    put4('c',':',' ',C_n);
+
+    pc_get(1, pc_addr_old, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','1',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    commit;
+}
+
+void runner_read()
+{
+    long *pc_addr;
+
+    put8(C_n,'r',':','r','e','a','d',C_n);
+
+    pc_addr = (long*)PHASING_CACHE_ADDR;
+
+    pc_addr[0] = 12;
+    pc_addr[1] = 12;
+    pc_addr[SEG_SIZE/sizeof_long-1] = 12;
+
+    pc_get(0, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','0',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    pc_get(1, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','1',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    pc_get(0, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','0',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    put8('a','f','t','e','r','s','y','n');
+    put4('c',':',' ',C_n);
+
+    pc_get(1, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','1',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    commit;
+}
+
+void runner1()
+{
+    long space;
+    long *pc_addr;
+
+    put8(C_n,'r',':','o','n','e',' ',C_n);
+
+    pc_addr = (long*)PHASING_CACHE_ADDR;
+
+    pc_addr[0] = 8;
+    pc_addr[1] = 1;
+    pc_addr[SEG_SIZE/sizeof_long-1] = SEG_SIZE;
+
+    pc_write(0, pc_addr, SEG_SIZE/2, pc_addr);
+
+    pc_write(0, pc_addr + SEG_SIZE/2, SEG_SIZE - SEG_SIZE/2, pc_addr + SEG_SIZE/2);
+
+    pc_get(0, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','w','/','g');
+    put4(':','0',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    pc_get(1, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','1',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    pc_get(0, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','0',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    pc_sync(0);
+
+    put8('a','f','t','e','r','s','y','n');
+    put4('c',':',' ',C_n);
+
+    pc_get(1, pc_addr, SEG_SIZE, pc_addr);
+
+    put8('a','f','t','e','r','g','e','t');
+    put4(':','1',':',C_n);
+
+    putq(pc_addr[0]); wrln();
+    putq(pc_addr[1]); wrln();
+    putq(pc_addr[SEG_SIZE/sizeof_long-1]); wrln();
+
+    space = SPACE_START(1);
+    runner runner_read()
+        in space;
+
+    space = SPACE_START(2);
+    runner runner_read_new()
+        in space;
+
+    commit;
+}
+
+void main()
+{
+    long space;
+
+    space = SPACE_START(0);
+    runner runner1()
+        in space;
+
+    commit;
+}

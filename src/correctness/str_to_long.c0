@@ -1,0 +1,35 @@
+#include "libi0/stdlib.h"
+#include "libi0/stdio.h"
+
+void main()
+{
+    char buf[255];
+    long len;
+    long maxlen;
+    long rt;
+    long cont;
+    long n1;
+    long n2;
+
+    cont = 1;
+    do {
+        rt = input_line(buf, 255, &len);
+        if (rt == -1) cont = 0;
+        if (len > 0) {
+            putlong(len); putchar(':'); output_char_str(buf, len); wrln();
+            if (buf[0] != '#') {
+                maxlen = len;
+                rt = str_to_long(buf, maxlen, &len, &n1);
+                if (rt == 0) {
+                    rt = str_to_long(&buf[len], maxlen - len, &len, &n2);
+                    if (rt == 0) {
+                        cont = 0;
+                        putlong(n1); put4(' ','=','>',' '); putlong(n2); wrln();
+                    }
+                }
+            }
+        }
+    } while (cont == 1);
+
+    commit;
+}

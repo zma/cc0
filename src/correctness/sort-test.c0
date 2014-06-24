@@ -1,0 +1,110 @@
+
+#include "libi0/stddef.h"
+#include "libi0/stdio.h"
+#include "libi0/stdint.h"
+#include "libi0/string.h"
+#include "libi0/time.h"
+#include "libi0/malloc.h"
+
+#define TOPK_K 20
+
+// sort by value[], results are in idx[start,,end]
+void sort(long *idx, long start, long end, double *value)
+{
+    double pivot;
+    long p;
+    long i, tmp;
+
+    long *stack;
+    long stop;
+
+    // init stack
+    // Not: ensure no overflow
+    stack = (long*)pralloc(sizeof_long * 10240);
+    stop = 0;
+
+    // push initial value
+    stack[stop] = start; stop = stop + 1;
+    stack[stop] = end; stop = stop + 1;
+
+    while (stop > 0) {
+        // pop
+        stop = stop - 1; end = stack[stop];
+        stop = stop - 1; start = stack[stop];
+
+        // putchar('[');putq(start);putchar(',');putq(end);putchar(']');wrln();
+
+        i = end - start;
+        if (i > 0) {
+            // partition
+            pivot = value[idx[end]];
+            p = start;
+
+            for (i = start; i < end; i = i + 1) {
+                if (value[idx[i]] < pivot) {
+                    // swap idx[i] with idx[p]
+                    tmp = idx[p];
+                    idx[p] = idx[i];
+                    idx[i] = tmp;
+                    p = p + 1;
+                }
+            }
+            // swap idx[end] with idx[p]
+            tmp = idx[p];
+            idx[p] = idx[end];
+            idx[end] = tmp;
+
+            // push
+            // right
+            stack[stop] = p + 1; stop = stop + 1;
+            stack[stop] = end; stop = stop + 1;
+            // left
+            stack[stop] = start; stop = stop + 1;
+            stack[stop] = p - 1; stop = stop + 1;
+        }
+    }
+
+    return;
+}
+
+void topk()
+{
+    long *idx;
+    long i;
+    double *value;
+
+    long vertices_cnt;
+
+    vertices_cnt = TOPK_K;
+
+    // build init idx
+    idx = (long*)pralloc(sizeof_long * vertices_cnt);
+    value = (double*)pralloc(sizeof_long * vertices_cnt);
+    for (i = 0; i < vertices_cnt; i = i + 1) {
+        idx[i] = i;
+        value[i] = 200.0 - (double)i;
+    }
+
+    value[10] = 200000.0;
+
+    // sort it
+    sort(idx, 0, vertices_cnt - 1, value);
+
+    // print results
+    // PRINTSTR("Top ");
+    putq(TOPK_K);
+    // PRINTLN(":");
+
+    for (i = vertices_cnt - 1; i > vertices_cnt - 1 - TOPK_K; i = i - 1) {
+        // putchar('('); putq(idx[i]); putchar(','); output_double_binary(value[idx[i]]); putchar(')'); wrln();
+        putq(idx[i]); wrln();
+    }
+
+    commit;
+}
+
+void main()
+{
+    runner topk();
+    commit;
+}

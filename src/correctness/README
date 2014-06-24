@@ -1,9 +1,3 @@
 This are test programs for cc0.
 
-Need ./libi0 which is the libi0 library.
-
-There is usually one copy under l0sys.git:/libi0
-
-The correctness checking script compiles all *.c code and compare the corresponding correct/*.c.bin file.
-
-
+The correctness checking script compiles all *.c0 *.c code and compare the corresponding correct/*.c.bin file.
