@@ -21,8 +21,8 @@
 // should not large or equal than 4G
 #define DEFAULT_PAGE_CAPACITY (1024L*1024L*1024L*2L)
 
-// maximum number of concurrent connection for UDT
-#define UDT_MAX_CONN 32
+// maximum number of concurrent connection for NET
+#define NET_MAX_CONN 256
 
 // network: UDP select write timeout wait second
 #define NW_UDP_SELECT_W_SEC (0)
@@ -39,9 +39,6 @@
 #define NW_UDP_SELECT_R_SEC (0)
 // network: UDP select read timeout wait usecond
 #define NW_UDP_SELECT_R_USEC (10)
-
-// network: UDP receive buffer size
-#define NW_UDP_RECEIVE_BUFFER_SIZE 65535
 
 // network: home concurrent connection allowed
 #define NW_HOME_CONCURR_CONN_NUM 2048
@@ -81,16 +78,33 @@
 #define MEM_RC_PT_REQ_BUF_SIZE (16*MEM_RC_PREFETCH_PT_NUM+100)
 // #define MEM_RC_PT_REQ_BUF_SIZE 32000000
 
-// page prefetching
+// page prefetching method
+// NET: support TCP or UDT
+// If not defined, UDP is used
+#define MEM_PAGE_FETCHING_NET 1
+
 // must be defined for support to space
 #define MEM_ENABLE_PAGE_PREFETCHING 1
 
+#ifdef MEM_PAGE_FETCHING_NET
+#define MEM_RC_PREFETCH_PAGE_NUM (1024)
+#else // use UDP
 // number of prefetching pages
 // Note: The practical limit for the UDP datagram length which is
 // imposed by the underlying IPv4 protocol is 65,507 bytes (65,535 − 8
 // byte UDP header − 20 byte IP header).
 // In L0: mem_pkt header 40. 8 bytes for number of pages.
-#define MEM_RC_PREFETCH_PAGE_NUM 15
+// #define MEM_RC_PREFETCH_PAGE_NUM (15)
+#define MEM_RC_PREFETCH_PAGE_NUM (15)
+#endif
+
+// network: UDP receive buffer size
+#define NW_UDP_RECEIVE_BUFFER_SIZE 65535
+
+// network: NET send buffer size
+#define NW_NET_SEND_BUFFER_SIZE (sizeof(pt_page_info_t)*MEM_RC_PREFETCH_PAGE_NUM + sizeof(mem_pkt_t) + 512)
+
+#define NW_NET_RECEIVE_BUFFER_SIZE 65535
 
 // End of MEM configuration
 
@@ -128,6 +142,11 @@
 #define PR_START_ADDR  (PR_BEGIN)
 #define PR_LENGTH  ((SR_BEGIN - PR_BEGIN) - 1024)
 
+// Phasing cache
+#define PHASING_CACHE_ADDR (0x200200000L)
+#define PHASING_CACHE_LEN   (0xc0000000L)
+
+#define MAX_PHASING_CACHE_CNT  (64)
 
 // obsolete
 // // persistent memory range
@@ -221,7 +240,7 @@
 
 // Note: if defined PUSH_BUNDLED_REPLICAS
 // push replica processing on home and mem.vpc are seperated
-// for long run, we may migrate the page fetching to use UDT too
+// for long run, we may migrate the page fetching to use NET too
 
 #else // default 8TB
 
@@ -257,9 +276,9 @@
 //  ---------------------------------------------------------------------------
 //  |    PR   |        SR     |   Reserved    | Page Cache(0) | Page Cache(1) |
 //  ---------------------------------------------------------------------------
-//  0       16GiB           16TiB           32TiB          48TiB            64TiB
-//  0    0x4000000000   0x100000000000   0x200000000000  0x300000000000  0x400000000000
-//  0        2^34            2^44           2^45            3*2^44           2^46
+//  0       32GiB           16TiB           32TiB          48TiB            64TiB
+//  0    0x8000000000   0x100000000000   0x200000000000  0x300000000000  0x400000000000
+//  0        2^35            2^44           2^45            3*2^44           2^46
 //
 //  Linux supports only 47 bit address space (128TiB) for process
 //
@@ -409,8 +428,8 @@ enum {
     MEM_RC_PRE_COMMIT = 16,
     MEM_RC_DO_COMMIT = 17,
     MEM_RC_DO_COMMIT_ABORT = 18,
-    MEM_RETRIEVE_PAGE2 = 19,
     MEM_RETRIEVE_PAGE3 = 21,
+    MEM_RETRIEVE_PAGE_NET = 25,
     MEM_COMMIT_TX_DONE = 20,
 };
 

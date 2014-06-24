@@ -72,10 +72,10 @@ void print_usage(char *cmd) {
             "Options:\n"
             "--debug, -g\n"
             "        Output debugging information.\n"
-            "-Dopts\n"
-            "        Pass -Dopts to the preprocessor.\n"
-            "-Ddirs\n"
-            "        Pass -Idirs to the preprocessor.\n"
+            "-Dmacro...\n"
+            "        Pass -Dmacro... to the preprocessor.\n"
+            "-Idir...\n"
+            "        Pass -Idir... to the preprocessor.\n"
             "\n");
 
     return;
