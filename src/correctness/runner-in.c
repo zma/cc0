@@ -1,10 +1,5 @@
 #include "libi0/stdio.h"
 
-register long R1;
-register long R2;
-register long R3;
-register long R4;
-
 long data[1000];
 
 void runner1()
@@ -29,5 +24,3 @@ void main()
 
     commit;
 }
-
-

@@ -1,7 +1,5 @@
 #include "libi0/stdio.h"
 
-#define PPM_START 0x80000000000
-
 #define DATA_SIZE 0x8000
 // #define DATA_SIZE 0x8000000
 // #define DATA_SIZE 0x10000000
@@ -61,7 +59,7 @@ void reader()
             output_error();
             correct = 0;
             abort;
-        } 
+        }
     }
 
     if (correct != 0) {
@@ -186,5 +184,3 @@ void init(long only_reader)
 
     commit;
 }
-
-
