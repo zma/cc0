@@ -144,7 +144,7 @@
 // *************************
 // VPC and scheduler
 
-#define noMM_ENABLE_PRNT_MMAP 1
+#define MM_ENABLE_PRNT_MMAP 1
 
 #define PR_RUNNER_SB 0x100000100;
 #define PR_RUNNER_SS 0x100000108;
@@ -180,6 +180,12 @@
 
 #define SYSCALL_ID_USLEEP  (2)
 #define SYSCALL_ID_GETTIME (7)
+
+// phasing cache
+#define SYSCALL_ID_PC_GET    (8)
+#define SYSCALL_ID_PC_WRITE  (9)
+#define SYSCALL_ID_PC_DELETE (10)
+#define SYSCALL_ID_PC_SYNC   (11)
 
 // streaming I/O
 #define SYSCALL_ID_SREAD   (3)
