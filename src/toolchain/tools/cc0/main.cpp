@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
                 std::cerr << "syntax error!\n";
                 return -1;
             }
-        } else if ((strcmp(argv[i], "--debug") == 0) || (strcmp(argv[i], "-g") == 0)) {
+        } else if (strcmp(argv[i], "--debug") == 0 || strcmp(argv[i], "-g") == 0) {
             debug = true;
         }
         /*
@@ -131,13 +131,13 @@ int main(int argc, char **argv) {
         else if (strcmp(argv[i], "-I") == 0 && i + 1 < argc) {
             cpp_args += " " + std::string(argv[i]) + std::string(argv[i + 1]);
             ++i;
-        } else if ((strcmp(argv[i], "-c") == 0)) {
+        } else if (strcmp(argv[i], "-c") == 0) {
             compile_only = true;
         } else if (strncmp(argv[i], "-I", 2) == 0) {
             cpp_args += " " + std::string(argv[i]);
         } else if (strncmp(argv[i], "-D", 2) == 0) {
             cpp_args += " " + std::string(argv[i]);
-        } else if ((strcmp(argv[i], "--help") == 0) || strcmp(argv[i], "-h") == 0) {
+        } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             print_usage(argv[0]);
             return 0;
         } else if (strncmp(argv[i], "-", 1) != 0) {
@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
                 if (debug) {
                     cc0_cmdline << " -g";
                 }
-                std::cout << "invoking " << cc0_cmdline.str() << "\n";
+                std::cout << "invoking \"" << cc0_cmdline.str() << "\"\n";
                 std::cout.flush();
                 if (system(cc0_cmdline.str().c_str())) {
                     std::cerr << "compiling " << *i << "failed!\n";

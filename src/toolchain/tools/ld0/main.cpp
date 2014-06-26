@@ -119,7 +119,7 @@ try {
     return obj;
 }
 catch (std::exception& e) {
-    std::cerr << file << " not loaded!\n";
+    ::std::cerr << file << " not loaded!\n";
     throw;
 }
 
@@ -403,7 +403,7 @@ try {
                 ::std::cerr << "invalid argument!\n";
                 return -1;
             }
-        } else if ((strcmp(argv[i], "--debug") == 0) || (strcmp(argv[i], "-g") == 0)) {
+        } else if (strcmp(argv[i], "--debug") == 0 || strcmp(argv[i], "-g") == 0) {
             CompilationContext::GetInstance()->Debug = true;
         } else if (strcmp(argv[i], "-L") == 0 && i + 1 < argc) {
             lib_paths.push_back(argv[i + 1]);
@@ -413,12 +413,14 @@ try {
         } else if (strncmp(argv[i], "-l", 2) == 0) {
             ::std::string library_file_name(::std::string("lib") + (argv[i] + 2) + ".o");
             lib_obj_files.push_back(library_file_name);
-        } else if ((strcmp(argv[i], "--help") == 0) || strcmp(argv[i], "-h") == 0) {
-
+        } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             print_usage(argv[0]);
             return 1;
-        } else {
+        } else if (strncmp(argv[i], "-", 1) != 0) {
             cc0_obj_files.push_back(argv[i]);
+        } else {
+            ::std::cerr << "Unsupported option: " << argv[i] << ::std::endl;
+            return -1;
         }
     }
 
