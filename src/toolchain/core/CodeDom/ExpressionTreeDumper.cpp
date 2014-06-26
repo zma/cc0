@@ -216,7 +216,7 @@ void ExpressionTreeDumper::Visit(CallExpression* node)
     target->Accept(this);
     if(CompilationContext::GetInstance()->Debug)
         printf("(");
-    for (int i = 0; i < arguments->size(); i++)
+    for (size_t i = 0; i < arguments->size(); i++)
     {
         Expression *arg = (*arguments)[i];
         arg->Accept(this);
@@ -506,7 +506,7 @@ void ExpressionTreeDumper::Visit(NewRunnerExpression* node)
     target->Accept(this);
     if(CompilationContext::GetInstance()->Debug)
         printf("(");
-    for (int i = 0; i < arguments->size(); i++)
+    for (size_t i = 0; i < arguments->size(); i++)
     {
         Expression *arg = (*arguments)[i];
         arg->Accept(this);
@@ -518,7 +518,7 @@ void ExpressionTreeDumper::Visit(NewRunnerExpression* node)
     }
     if(CompilationContext::GetInstance()->Debug)
         printf(") watching (");
-    for (int i = 0; i < watching->size(); i++)
+    for (size_t i = 0; i < watching->size(); i++)
     {
         Expression *arg = (*watching)[i];
         arg->Accept(this);
@@ -530,7 +530,7 @@ void ExpressionTreeDumper::Visit(NewRunnerExpression* node)
     }
     if(CompilationContext::GetInstance()->Debug)
         printf(") using (");
-    for (int i = 0; i < usingList->size(); i++)
+    for (size_t i = 0; i < usingList->size(); i++)
     {
         Expression *arg = (*usingList)[i];
         arg->Accept(this);
@@ -542,7 +542,7 @@ void ExpressionTreeDumper::Visit(NewRunnerExpression* node)
     }
     if(CompilationContext::GetInstance()->Debug)
         printf(") in (");
-    for (int i = 0; i < space->size(); i++)
+    for (size_t i = 0; i < space->size(); i++)
     {
         Expression *arg = (*space)[i];
         arg->Accept(this);

@@ -1,0 +1,78 @@
+== How to build k-means ==
+
+    $ make
+
+== How to run k-means on L0 ==
+
+To run kmeans with input file input.file
+
+    $ am run kmeans-stdin-to-pmem.bin input.file
+    $ am run kmeans-from-pmem.bin
+
+== Correctness tests ==
+
+=== Tiny tests ===
+
+Undefine
+
+#define TINY_EXP
+
+and `make` it again.
+
+2 test cases:
+
+Input: kmeans.input.tiny
+
+Results:
+
+4 6 4 100
+100 8 4 4
+
+Input: kmeans.input.tiny2
+
+Results:
+
+4 6 4 100
+100 8 5 3
+
+=== Small tests ===
+
+Undefine 
+
+#define SMALL_EXP
+
+in kmeans.c
+
+and `make` it again.
+
+Get the input file:
+
+    $ wget http://baijia.info/l0/kmeans.input.small.tar.bz2
+    $ tar xf kmeans.input.small.tar.bz2
+
+Input: kmeans.input.small
+
+---------------------------
+small test, 6 iteration, correct results:
+
+20 centroids:
+1091022382 -868969987 -549576541 390501081
+-469893473 1080140553 -674870598 620612898
+-349167660 723889537 -432431709 -1203295285
+-135308801 -166872151 63163816 -187323148
+253366437 102098705 -450125860 464950916
+976291852 749554855 -350114278 -531279148
+-704474133 525600444 -486234376 -292551732
+-120810351 -511567397 1055998236 41650595
+-109952695 -111095294 65185987 94515528
+649626760 515877664 515855446 892134159
+416531394 -1011208053 477130561 658164542
+299828842 -481134315 -1081627156 123393157
+-860909682 -530165846 -969845803 405323593
+-881880341 576126348 781236483 -659763647
+-947677033 193008402 623491150 779626164
+-895213226 -548785116 -469856657 -1079974239
+435821205 -948353704 100589320 -1169279978
+635212481 253059954 1015823962 -479473201
+-730863694 -1156532081 331788776 84203621
+

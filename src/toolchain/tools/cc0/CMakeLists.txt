@@ -6,7 +6,7 @@ add_executable(cc0
 
 add_dependencies(cc0 core disa i0 langc flat)
 
-target_link_libraries(cc0 core langc disa i0 flat boost_serialization)
+target_link_libraries(cc0 core langc disa i0 flat boost_serialization pthread)
 target_link_libraries(cc0 ${BOEHMGC_LIBRARIES})
 
 

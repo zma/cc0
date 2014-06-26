@@ -826,7 +826,7 @@ void I0CodeGenerator::VisitCall(IL* il)
     int64_t pushSize = 0;
     int64_t retSize = 0;
 
-    for(int i = 2; i < il->Operands.size(); i++)
+    for(size_t i = 2; i < il->Operands.size(); i++)
     {
         pushSize += GetOperandSize(il->Operands[i].OperandType, PointerType::PointerSize);
     }
@@ -865,7 +865,7 @@ void I0CodeGenerator::VisitCall(IL* il)
     stackOffset += retSize;
 
     // Push parameters
-    for(int i = 2; i < il->Operands.size(); i++)
+    for(size_t i = 2; i < il->Operands.size(); i++)
     {
         I0Instruction *pushInst = NULL;
         pushInst = new I0Instruction();

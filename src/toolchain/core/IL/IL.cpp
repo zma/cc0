@@ -222,7 +222,7 @@ std::string IL::GetOperandString(const IL::ILOperand& operand)
             opstr += buffer;
             break;
         case Variable:
-            sprintf(buffer, "%s$%#llx", operand.SymRef->Name.c_str(), operand.SymRef->Scope);
+            sprintf(buffer, "%s$%p", operand.SymRef->Name.c_str(), operand.SymRef->Scope);
             opstr += buffer;
             break;
         case FieldToken:

@@ -208,7 +208,7 @@ void SymbolScope::Dump(int level)
         else
         {
             if(CompilationContext::GetInstance()->Debug)
-                printf("NAME: %s \tTYPE: %s\n", sym->Name.c_str(), sym->DeclType->ToString().c_str(), (long long)sym->Address);
+                printf("NAME: %s \tTYPE: %s\n", sym->Name.c_str(), sym->DeclType->ToString().c_str());
 
         }
     }

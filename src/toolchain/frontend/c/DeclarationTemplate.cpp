@@ -75,15 +75,15 @@ Type* DeclarationTemplate::GetType()
         type    = _baseType;
     }
 
-    for (int i = 0; i < _pointers.size(); i++)
+    for (size_t i = 0; i < _pointers.size(); i++)
     {
         DeclarationSpecifier spec = _pointers[i];
         type = GetDerivedType(type, spec);
     }
     
-    for (int i = _suffixes.size() - 1; i >= 0;i--)
+    for (size_t i = _suffixes.size(); i > 0;i--)
     {
-        DeclarationSpecifier spec = _suffixes[i];
+        DeclarationSpecifier spec = _suffixes[i - 1];
         type = GetDerivedType(type, spec);
     }
 
