@@ -1,6 +1,6 @@
-#include "libi0/stddef.h"
-#include "libi0/stdio.h"
-#include "libi0/pc.h"
+#include "stddef.h"
+#include "stdio.h"
+#include "pc.h"
 
 #define SEG_SIZE (50*1024*1024)
 

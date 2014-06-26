@@ -1,4 +1,4 @@
-#include "libi0/stdio.h"
+#include "stdio.h"
 
 long data[1000];
 

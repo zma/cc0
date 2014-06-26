@@ -1,10 +1,10 @@
 
-#include "libi0/stddef.h"
-#include "libi0/stdio.h"
-#include "libi0/stdint.h"
-#include "libi0/string.h"
-#include "libi0/time.h"
-#include "libi0/malloc.h"
+#include "stddef.h"
+#include "stdio.h"
+#include "stdint.h"
+#include "string.h"
+#include "time.h"
+#include "malloc.h"
 
 #define TOPK_K 20
 

@@ -1,5 +1,5 @@
-#include "libi0/stdio.h"
-#include "libi0/sio.h"
+#include "stdio.h"
+#include "sio.h"
 
 void runner1()
 {

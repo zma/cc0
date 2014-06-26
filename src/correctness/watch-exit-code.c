@@ -1,5 +1,5 @@
-#include "libi0/stdio.h"
-#include "libi0/stddef.h"
+#include "stdio.h"
+#include "stddef.h"
 
 // watch an to-commit-successfully task's exit code
 

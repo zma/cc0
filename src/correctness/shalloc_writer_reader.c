@@ -1,6 +1,6 @@
-#include "./libi0/stddef.h"
-#include "./libi0/stdio.h"
-#include "./libi0/malloc.h"
+#include "./stddef.h"
+#include "./stdio.h"
+#include "./malloc.h"
 
 void reader(long* data, long DATA_SIZE, long id)
 {

@@ -1,5 +1,5 @@
-#include "libi0/stdio.h"
-#include "libi0/unistd.h"
+#include "stdio.h"
+#include "unistd.h"
 
 void main()
 {

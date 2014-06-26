@@ -1,4 +1,4 @@
-#include "libi0/stdio.h"
+#include "stdio.h"
 
 char map_in[100];
 

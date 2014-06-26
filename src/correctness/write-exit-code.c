@@ -1,5 +1,5 @@
-#include "libi0/stdio.h"
-#include "libi0/stddef.h"
+#include "stdio.h"
+#include "stddef.h"
 
 standalone long status;
 
@@ -33,4 +33,3 @@ void main()
 
     commit;
 }
-

@@ -1,4 +1,4 @@
-#include "libi0/stdio.h"
+#include "stdio.h"
 
 #define DATA_SIZE 0x8000
 // #define DATA_SIZE 0x8000000

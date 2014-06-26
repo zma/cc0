@@ -1,6 +1,6 @@
-#include "libi0/stdio.h"
-#include "libi0/stddef.h"
-#include "libi0/unistd.h"
+#include "stdio.h"
+#include "stddef.h"
+#include "unistd.h"
 
 // watch an failed-to-commit task's exit code
 
