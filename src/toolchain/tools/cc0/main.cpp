@@ -192,7 +192,7 @@ int main(int argc, char **argv) {
         if (debug) {
             ld0_cmdline << " -g";
         }
-        std::cout << "invoking " << ld0_cmdline.str() << "\n";
+        std::cout << "invoking \"" << ld0_cmdline.str() << "\"\n";
         std::cout.flush();
 
         //link
