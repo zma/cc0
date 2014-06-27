@@ -1,6 +1,6 @@
 grammar I0;
 
-options 
+options
 {
     language    = C;
     backtrack   = true;
@@ -110,7 +110,7 @@ exit_instruction returns [I0Instruction *retval]
     {
         $retval = new I0Instruction();
         $retval->OpCode = I0Instruction::EXIT;
-    } ':'( 
+    } ':'(
         'c'
         {
             $retval->ExitMode = I0Instruction::Commit;
@@ -127,9 +127,9 @@ exit_instruction returns [I0Instruction *retval]
         {
             $retval->ExitMode = I0Instruction::AbortDelete;
         }
-    )        
+    )
     ;
-    
+
 mov_instruction returns [I0Instruction *retval]
     : 'mov' src = mov_operand ',' dest = mov_operand
     {
@@ -153,12 +153,12 @@ arithmatic_instruction returns [I0Instruction *retval]
     ;
 
 br_instruction returns [I0Instruction *retval]
-    : 'br' ':' 
+    : 'br' ':'
     {
         $retval = new I0Instruction();
         $retval->OpCode = I0Instruction::B;
     }
-    ( 
+    (
         'j' r1 = br_relative imm1 = immediate_operand
         {
             $retval->JumpMode = I0Instruction::J;
@@ -170,7 +170,7 @@ br_instruction returns [I0Instruction *retval]
             $retval->JumpMode = I0Instruction::JI;
             $retval->Operands[0] = $target.retval;
         }
-        | br_mode_compare ':' attr1 = attributes r2=br_relative op1 = operand ',' op2 = operand ',' op3 = immediate_operand
+        | br_mode_compare ',' attr1 = attributes r2=br_relative op1 = operand ',' op2 = operand ',' op3 = immediate_operand
         {
             $retval->Attribute = $attr1.retval;
             $retval->JumpMode = $br_mode_compare.retval;
@@ -179,7 +179,7 @@ br_instruction returns [I0Instruction *retval]
             $retval->Operands[2] = $op3.retval;
             $retval->RelativeJump = $r2.retval;
         }
-        | br_mode_zero ':' attr2 = attributes r3=br_relative op4 = operand ',' op5 = immediate_operand
+        | br_mode_zero ',' attr2 = attributes r3=br_relative op4 = operand ',' op5 = immediate_operand
         {
             $retval->Attribute = $attr2.retval;
             $retval->JumpMode = $br_mode_zero.retval;
@@ -220,7 +220,7 @@ nop_instruction returns [I0Instruction *retval]
         $retval->OpCode = I0Instruction::NOP;
     }
     ;
-    
+
 softint_instruction returns [I0Instruction *retval]
     : 'int' inum = integer_value
     {
@@ -260,12 +260,12 @@ br_mode_compare returns [I0Instruction::BJumpMode retval]
     | 'ne' { $retval = I0Instruction::NE; }
     | 'sl' { $retval = I0Instruction::SL; }
     ;
-    
+
 br_mode_zero returns [I0Instruction::BJumpMode retval]
     : 'z' { $retval = I0Instruction::Z; }
     | 'nz' { $retval = I0Instruction::NZ; }
     ;
-    
+
 br_relative returns [bool retval]
     : 'a'
     {
@@ -276,7 +276,7 @@ br_relative returns [bool retval]
         return true;
     }
     ;
-    
+
 arithmatic_opcode returns [I0Instruction::I0Opcode retval]
     : 'add'
     {
@@ -307,7 +307,8 @@ arithmatic_opcode returns [I0Instruction::I0Opcode retval]
         $retval = I0Instruction::XOR;
     }
     ;
-    
+
+// uq and sq are deprecated
 attributes returns [I0Instruction::OperandAttribute retval]
     : 'uq'
     {
@@ -317,9 +318,25 @@ attributes returns [I0Instruction::OperandAttribute retval]
     {
         $retval = I0Instruction::Unsigned64;
     }
+    | 'ue'
+    {
+        $retval = I0Instruction::Unsigned64;
+    }
+    | 'se'
+    {
+        $retval = I0Instruction::Unsigned64;
+    }
+    | 'fd'
+    {
+        $retval = I0Instruction::Double;
+    }
+    | 'fs'
+    {
+        $retval = I0Instruction::Single;
+    }
     // TODO: Finish it
     ;
-    
+
 mov_operand returns [I0Instruction::I0Operand retval]
     : op = operand ':' ma = mov_attributes
     {
@@ -327,7 +344,8 @@ mov_operand returns [I0Instruction::I0Operand retval]
         $retval.ConvAttribute = $ma.retval;
     }
     ;
-    
+
+// muq and msq are deprecated
 mov_attributes returns [I0Instruction::ConvOperandAttribute retval]
     : 'muq'
     {
@@ -337,9 +355,18 @@ mov_attributes returns [I0Instruction::ConvOperandAttribute retval]
     {
         return I0Instruction::ConvSigned64;
     }
+    | 'ue'
+    {
+        return I0Instruction::ConvUnsigned64;
+    }
+    | 'se'
+    {
+        return I0Instruction::ConvSigned64;
+    }
+
     // TODO: Finish it
     ;
-    
+
 operand returns [I0Instruction::I0Operand retval]
     : op1 = immediate_operand
     {
@@ -358,10 +385,10 @@ operand returns [I0Instruction::I0Operand retval]
         $retval = $op4.retval;
     }
     ;
-    
+
 immediate_operand returns [I0Instruction::I0Operand retval]
     : '$' integer_value
-    {        
+    {
         $retval = I0Instruction::I0Operand(I0Instruction::Immediate, $integer_value.retval, I0Instruction::ConvSigned64);
     }
     | '$' fp_value
@@ -403,7 +430,7 @@ base_disp_operand returns [I0Instruction::I0Operand retval]
     : disp1 = integer_value '(' base1 = integer_value ')'
     {
         $retval = I0Instruction::I0Operand(I0Instruction::BaseDisplacement, $base1.retval, $disp1.retval, I0Instruction::ConvSigned64);
-    }    
+    }
     | disp2 = integer_value '(' base2 = symbol_ref ')'
     {
         $retval = I0Instruction::I0Operand(I0Instruction::BaseDisplacement, 0, $disp2.retval, I0Instruction::ConvSigned64);
@@ -418,7 +445,7 @@ symbol_ref returns [SymbolRef* retval]
 
         $retval = new SymbolRef(_i0currentScope, name);
     }
-    ;    
+    ;
 integer_value returns [int64_t retval]
     : DECIMAL_LITERAL
     {
@@ -471,7 +498,7 @@ data_content returns [I0Instruction *retval]
 IDENTIFIER
     :   LETTER (LETTER|'0'..'9')*
     ;
-        
+
 
 
 fragment
@@ -502,7 +529,7 @@ DECIMAL_LITERAL returns [int64_t retval]
 OCTAL_LITERAL : '0' ('0'..'7')+ IntegerTypeSuffix? ;
 
 fragment
-HexDigit 
+HexDigit
     : ('0'..'9'|'a'..'f'|'A'..'F')
     ;
 
@@ -531,7 +558,7 @@ EscapeSequence
     ;
 
 fragment
-OctalEscape 
+OctalEscape
     :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
     |   '\\' ('0'..'7') ('0'..'7')
     |   '\\' ('0'..'7')
@@ -553,4 +580,3 @@ WS  :  (' '|'\t'|'\u000C') {$channel=HIDDEN;}
 LINE_COMMENT
     : '#' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
-
