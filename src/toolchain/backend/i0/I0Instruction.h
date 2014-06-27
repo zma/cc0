@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <core/Target/TargetInstruction.h>
 #include <string>
@@ -24,7 +24,7 @@ public:
         CONV    = 0x21,
         ADD     = 0x03,
         SUB     = 0x06,
-        MUL     = 0x09,    
+        MUL     = 0x09,
         DIV     = 0x0C,
         AND     = 0x18,
         OR      = 0x1B,
@@ -51,22 +51,22 @@ public:
         ConvUnsigned128  = 0x6,
         ConvDouble       = 0x9,
         ConvSingle       = 0x8
-    }; 
-    
+    };
+
     enum OperandAttribute
     {
-        Signed8      = ConvSigned8     , 
-        Unsigned8    = ConvUnsigned8   , 
-        Signed32     = ConvSigned32    , 
-        Unsigned32   = ConvUnsigned32  , 
-        Signed64     = ConvSigned64    , 
-        Unsigned64   = ConvUnsigned64  , 
-        Signed128    = ConvSigned128   , 
-        Unsigned128  = ConvUnsigned128 , 
-        Double       = ConvDouble      , 
-        Single       = ConvSingle       
+        Signed8      = ConvSigned8     ,
+        Unsigned8    = ConvUnsigned8   ,
+        Signed32     = ConvSigned32    ,
+        Unsigned32   = ConvUnsigned32  ,
+        Signed64     = ConvSigned64    ,
+        Unsigned64   = ConvUnsigned64  ,
+        Signed128    = ConvSigned128   ,
+        Unsigned128  = ConvUnsigned128 ,
+        Double       = ConvDouble      ,
+        Single       = ConvSingle
     };
-    
+
     enum OperandAddressingMode
     {
         Immediate = 0x0,
@@ -74,7 +74,7 @@ public:
         Indirect = 0x2,
         BaseDisplacement = 0x3
     };
-    
+
     enum BJumpMode
     {
         J       = 0x0,
@@ -86,8 +86,8 @@ public:
         NZ      = 0x7,
         SL      = 0x8,
         JI      = 0xC,
-    };    
-   
+    };
+
     enum ShiftType
     {
         ST_L      = 0,
@@ -107,7 +107,7 @@ public:
         CommitDelete = 2,
         AbortDelete = 3
     };
-    
+
 public:
     struct I0Operand
     {
@@ -127,29 +127,30 @@ public:
             uint64_t UIntValue;         // For Immediate
             double DoubleValue;         // For Immediate
             float SingleValue;          // For Immediate
-            
+
             struct                      // For /Direct/Indirect/Base + Displacement
             {
-                int64_t Address;               
+                int64_t Address;
                 int32_t Displacement;   // For Base + Displacement only
-            };        
+            };
         };
         SymbolRef *SymRef;
     };
 public:
     static const int MAX_NUM_OPERANDS = 5;      // The SPAWN inctruction 4: The SCMP instruction 5: SPAWNX instruction 5.
-    
+
 public:
     I0AddrSizePrefix AddrSizePrefix;
     I0Opcode OpCode;
     OperandAttribute Attribute;
     BJumpMode JumpMode;
     bool RelativeJump;
-    ExitActionMode ExitMode;        
+    ExitActionMode ExitMode;
     I0Operand Operands[MAX_NUM_OPERANDS];
-    
+
 private:
     std::string GetOperand(I0Instruction::I0Operand op);
+    std::string GetOperandAttr(I0Instruction::I0Operand op);
     std::string GetConvOperand(I0Instruction::I0Operand op);
     char * EncodeOperandData(char *buffer, I0Operand operand, I0AddrSizePrefix AddrSizePrefix);
     int64_t GetOperandEncodingLength(I0Operand operand);
@@ -164,4 +165,3 @@ public:
     virtual int64_t GetLength();
     virtual std::string ToString();
 };
-

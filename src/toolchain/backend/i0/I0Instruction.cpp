@@ -225,7 +225,7 @@ char* I0Instruction::EncodeOperandData(char* buffer, I0Instruction::I0Operand op
         fprintf(stderr, "SBM operand encoding is not supported yet.\n");
         abort();
     }
-    
+
     switch(operand.AddressingMode)
     {
         case Immediate:
@@ -578,29 +578,51 @@ std::string I0Instruction::GetConvOperand(I0Instruction::I0Operand op)
         default:
             abort();
     }
-    
+
                 switch(op.ConvAttribute)
             {
                 case ConvSigned64:
-                    return std::string(buf) + ":msq";
+                    return std::string(buf) + ":sq";
                 case ConvUnsigned64:
-                    return std::string(buf) + ":muq";
+                    return std::string(buf) + ":uq";
                 case ConvSigned32:
-                    return std::string(buf) + ":msd";
+                    return std::string(buf) + ":sd";
                 case ConvUnsigned32:
-                    return std::string(buf) + ":mud";
+                    return std::string(buf) + ":ud";
                 case ConvSigned8 :
-                    return std::string(buf) + ":msb";
+                    return std::string(buf) + ":sb";
                 case ConvUnsigned8:
-                    return std::string(buf) + ":mub";
+                    return std::string(buf) + ":ub";
                 case ConvDouble:
-                    return std::string(buf) + ":mfd";
+                    return std::string(buf) + ":fd";
                 case ConvSingle:
-                    return std::string(buf) + ":mfs";
+                    return std::string(buf) + ":fs";
                 default:
                     abort();
             }
 
+}
+
+std::string I0Instruction::GetOperandAttr(I0Instruction::I0Operand op)
+{
+    switch(this->Attribute) {
+    case Unsigned64:
+        return "ue";
+        break;
+    case Double:
+        return "fd";
+        break;
+    case Single:
+        return "fs";
+        break;
+    case Signed64:
+        return "se";
+        break;
+    default:
+        std::cout << "I0Instruction::GetOperandAttr: not supported Attribute" << std::endl;
+        abort();
+        break;
+    }
 }
 
 std::string I0Instruction::GetOperand(I0Instruction::I0Operand op)
@@ -678,9 +700,6 @@ std::string I0Instruction::GetOperand(I0Instruction::I0Operand op)
 
 }
 
-// zma
-// TODO: format
-//
 std::string I0Instruction::ToString()
 {
     std::string opstr;
@@ -765,7 +784,7 @@ std::string I0Instruction::ToString()
             switch(this->JumpMode)
             {
                 case J:
-                    return asp + std::string("b:j ")
+                    return asp + std::string("b:j,")
                            + (RelativeJump ? "r" : "a") + " \t"
                            + GetOperand(Operands[0]);
                 case JI:
@@ -795,28 +814,34 @@ std::string I0Instruction::ToString()
                     goto conditional_jump2;
 
                 conditional_jump:
-                    return opstr + " "
-                           + (RelativeJump ? "r" : "a") + " \t"
-                           + GetOperand(Operands[0])
-                           + ", "
-                           + GetOperand(Operands[1])
-                           + ", "
-                           + GetOperand(Operands[2])
-                           ;
+                    return opstr + ","
+                        + GetOperandAttr(Operands[0])
+                        + ","
+                        + (RelativeJump ? "r" : "a")
+                        + " \t"
+                        + GetOperand(Operands[0])
+                        + ", "
+                        + GetOperand(Operands[1])
+                        + ", "
+                        + GetOperand(Operands[2])
+                        ;
 
                 conditional_jump2:
-                    return opstr + " "
-                           + (RelativeJump ? "r" : "a") + " \t"
-                           + GetOperand(Operands[0])
-                           + ", "
-                           + GetOperand(Operands[1])
-                           ;
-                default:
+                    return opstr + ","
+                        + GetOperandAttr(Operands[0])
+                        + ","
+                        + (RelativeJump ? "r" : "a")
+                        + " \t"
+                        + GetOperand(Operands[0])
+                        + ", "
+                        + GetOperand(Operands[1])
+                        ;
+            default:
                     abort();
             }
         case SPAWN:
 
-            return asp + 
+            return asp +
                 "spawn\t"
                 + GetOperand(Operands[0])
                 + ", "
@@ -828,7 +853,7 @@ std::string I0Instruction::ToString()
                 ;
         case SPAWNX:
 
-            return asp + 
+            return asp +
                 "spawnx\t"
                 + GetOperand(Operands[0])
                 + ", "
@@ -861,7 +886,7 @@ std::string I0Instruction::ToString()
         case NOP:
             return asp + "nop";
         case SCMP:
-            return asp + 
+            return asp +
                 "scmp \t"
                 + GetOperand(Operands[0])
                 + ", "
@@ -874,7 +899,7 @@ std::string I0Instruction::ToString()
                 + GetOperand(Operands[4])
                 ;
         case GREP:
-            return asp + 
+            return asp +
                 "grep \t"
                 + GetOperand(Operands[0])
                 + ", "
@@ -1033,5 +1058,3 @@ void I0Instruction::VParse(SymbolScope *scope,std::string fmt, va_list args)
 
     Parse(scope, str);
 }
-
-
