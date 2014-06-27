@@ -513,7 +513,9 @@ try {
         ::std::ofstream mapdump(mapFileName.c_str());
         DumpScope(SymbolScope::GetRootScope(), mapdump);
     }
-    printf("Maximum stack frame size: 0x%llX\n", (long long) (context->MaxStackFrame));
+    if (CompilationContext::GetInstance()->Debug) {
+        printf("Maximum stack frame size: 0x%llX\n", (long long) (context->MaxStackFrame));
+    }
 
     char *textBuf = new char[0x100000];
     int64_t textSize = 0;

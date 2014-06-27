@@ -167,8 +167,10 @@ int main(int argc, char **argv) {
                 if (debug) {
                     cc0_cmdline << " -g";
                 }
-                std::cout << "invoking \"" << cc0_cmdline.str() << "\"\n";
-                std::cout.flush();
+                if (CompilationContext::GetInstance()->Debug) {
+                    std::cout << "invoking \"" << cc0_cmdline.str() << "\"\n";
+                    std::cout.flush();
+                }
                 if (system(cc0_cmdline.str().c_str())) {
                     std::cerr << "compiling " << *i << "failed!\n";
                     return 1;
@@ -192,8 +194,10 @@ int main(int argc, char **argv) {
         if (debug) {
             ld0_cmdline << " -g";
         }
-        std::cout << "invoking \"" << ld0_cmdline.str() << "\"\n";
-        std::cout.flush();
+        if (CompilationContext::GetInstance()->Debug) {
+            std::cout << "invoking \"" << ld0_cmdline.str() << "\"\n";
+            std::cout.flush();
+        }
 
         //link
         if (system(ld0_cmdline.str().c_str())) {
@@ -267,7 +271,9 @@ int main(int argc, char **argv) {
             context->CurrentFileName = inputFile;
 
             std::string cmdline = "cpp -nostdinc --sysroot ." + cpp_args + " " + inputFile + " -o " + tmpFileName;
-            std::cout << "Preprocessing with cmd \"" + cmdline << "\"" << std::endl;
+            if (CompilationContext::GetInstance()->Debug) {
+                std::cout << "Preprocessing with cmd \"" + cmdline << "\"" << std::endl;
+            }
 
             if (system(cmdline.c_str()) != 0) {
                 return 1;
