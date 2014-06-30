@@ -36,7 +36,9 @@ public:
         INT     = 0x24,
         SHIFT   = 0x27,
         SCMP    = 0x2A,
-        GREP    = 0x30
+        GREP    = 0x30,
+        EXP     = 0x40,
+        LOG     = 0x44
     };
 
     enum ConvOperandAttribute
@@ -108,6 +110,13 @@ public:
         AbortDelete = 3
     };
 
+    enum Base
+    {
+        BaseE = 0,
+        Base2 = 1,
+        Base10 = 2,
+    };
+
 public:
     struct I0Operand
     {
@@ -147,6 +156,7 @@ public:
     bool RelativeJump;
     ExitActionMode ExitMode;
     I0Operand Operands[MAX_NUM_OPERANDS];
+    Base ExpBase;
 
 private:
     std::string GetOperand(I0Instruction::I0Operand op);

@@ -104,6 +104,7 @@ int main(int argc, char **argv) {
             }
         } else if (strcmp(argv[i], "--debug") == 0 || strcmp(argv[i], "-g") == 0) {
             debug = true;
+            CompilationContext::GetInstance()->Debug = debug;
         }
         /*
          else if (strcmp(argv[i], "--i0") == 0)
@@ -164,7 +165,7 @@ int main(int argc, char **argv) {
                 objfiles.push_back(obj);
                 std::stringstream cc0_cmdline;
                 cc0_cmdline << "cc0 -c " << *i << " -o " << obj << cpp_args;
-                if (debug) {
+                if (CompilationContext::GetInstance()->Debug) {
                     cc0_cmdline << " -g";
                 }
                 if (CompilationContext::GetInstance()->Debug) {
@@ -191,7 +192,7 @@ int main(int argc, char **argv) {
         for (std::vector<std::string>::iterator i = objfiles.begin(), iE = objfiles.end(); i != iE; ++i) {
             ld0_cmdline << " " << *i;
         }
-        if (debug) {
+        if (CompilationContext::GetInstance()->Debug) {
             ld0_cmdline << " -g";
         }
         if (CompilationContext::GetInstance()->Debug) {

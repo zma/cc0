@@ -100,6 +100,7 @@ instruction returns [I0Instruction *retval]
     | softint_instruction { $retval = $softint_instruction.retval; }
     | strcmp_instruction { $retval = $strcmp_instruction.retval; }
     | grep_instruction { $retval = $grep_instruction.retval; }
+    | exp_instruction { $retval = $exp_instruction.retval; }
     ;
 
 //////////////////////////////////////////////////////
@@ -252,6 +253,22 @@ grep_instruction returns [I0Instruction *retval]
         $retval->Operands[3] = $op4.retval;
         $retval->Operands[4] = $op5.retval;
     }
+    ;
+exp_instruction returns [I0Instruction *retval]
+    : 'exp' ':'
+    {
+        $retval = new I0Instruction();
+        $retval->OpCode = I0Instruction::EXP;
+    }
+    (
+        'e' ',' attr = attributes op1 = operand ',' op2 = operand
+         {
+                $retval->ExpBase = I0Instruction::BaseE;
+                $retval->Attribute = $attributes.retval;
+                $retval->Operands[0] = $op1.retval;
+                $retval->Operands[1] = $op2.retval;
+         }
+    )
     ;
 br_mode_compare returns [I0Instruction::BJumpMode retval]
     : 'l' { $retval = I0Instruction::L; }

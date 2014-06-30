@@ -162,6 +162,7 @@ int64_t I0Instruction::GetOperandEncodingLength(I0Instruction::I0Operand operand
                             n = 4;
                             break;
                         default:
+                            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                             abort();
                     }
                     break;
@@ -172,6 +173,7 @@ int64_t I0Instruction::GetOperandEncodingLength(I0Instruction::I0Operand operand
                 case I0Instruction::AND:
                 case I0Instruction::OR:
                 case I0Instruction::XOR:
+                case I0Instruction::EXP:
                     // printf("GL:\n");
                     switch(this->Attribute)
                     {
@@ -188,6 +190,7 @@ int64_t I0Instruction::GetOperandEncodingLength(I0Instruction::I0Operand operand
                         default:
                             printf("GL abort.\n");
                             printf("Attribute: %#lx.\n", this->Attribute);
+                            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                             abort();
                     }
                     break;
@@ -201,6 +204,7 @@ int64_t I0Instruction::GetOperandEncodingLength(I0Instruction::I0Operand operand
                 case I0Instruction::EXIT:
                 case I0Instruction::NOP:
                 default:
+                    std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                     abort();
             }
             break;
@@ -212,6 +216,7 @@ int64_t I0Instruction::GetOperandEncodingLength(I0Instruction::I0Operand operand
             n = 8 + 4;
             break;
         default:
+            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
             abort();
     }
     return n;
@@ -223,6 +228,7 @@ char* I0Instruction::EncodeOperandData(char* buffer, I0Instruction::I0Operand op
 
     if (AddrSizePrefix == SBM) {
         fprintf(stderr, "SBM operand encoding is not supported yet.\n");
+        std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
         abort();
     }
 
@@ -244,8 +250,10 @@ char* I0Instruction::EncodeOperandData(char* buffer, I0Instruction::I0Operand op
                 case I0Instruction::B:
                 case I0Instruction::SCMP:
                 case I0Instruction::GREP:
+                case I0Instruction::EXP:
                     // NOTE: I do not assume the host machine is little-endian, so I explicitly encode each byte of integers
                     // FIXME: Does floating-point encoding has endianess? I assume no, but I'm not sure.
+                    // Note: For floating-point, we follow the IEEE Standard for Floating-Point Arithmetic (IEEE 754) -- zma
                     switch(operand.ConvAttribute)
                     {
                         case ConvSigned64:
@@ -295,12 +303,14 @@ char* I0Instruction::EncodeOperandData(char* buffer, I0Instruction::I0Operand op
                             p += 4;
                             break;
                         default:
+                            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                             abort();
                     }
                     break;
                 case I0Instruction::EXIT:
                 case I0Instruction::NOP:
                 default:
+                    std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                     abort();
             }
             break;
@@ -330,6 +340,7 @@ char* I0Instruction::EncodeOperandData(char* buffer, I0Instruction::I0Operand op
             *p++ = (operand.Address >> 0x38) & 0xFF;
             break;
         default:
+            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
             abort();
     }
     return p;
@@ -439,6 +450,7 @@ void I0Instruction::Encode(char* buffer)
             }
             else
             {
+                std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                 abort();
             }
 
@@ -488,7 +500,15 @@ void I0Instruction::Encode(char* buffer)
             p = EncodeOperandData(p, Operands[3], AddrSizePrefix);
             p = EncodeOperandData(p, Operands[4], AddrSizePrefix);
             break;
+        case EXP:
+            _p = *p;
+            *p++ = _p | (ExpBase << 3) | (Attribute >> 1);
+            *p++ = (Attribute << 7) | (Operands[0].AddressingMode << 4) | (Operands[1].AddressingMode << 1);
+            p = EncodeOperandData(p, Operands[0], AddrSizePrefix);
+            p = EncodeOperandData(p, Operands[1], AddrSizePrefix);
+            break;
         default:
+            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
             abort();
     }
 }
@@ -532,6 +552,7 @@ std::string I0Instruction::GetConvOperand(I0Instruction::I0Operand op)
                         sprintf(buf, "$%f", op.SingleValue);
                         break;
                     default:
+                        std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                         abort();
                 }
             }
@@ -576,6 +597,7 @@ std::string I0Instruction::GetConvOperand(I0Instruction::I0Operand op)
 
             break;
         default:
+            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
             abort();
     }
 
@@ -598,6 +620,7 @@ std::string I0Instruction::GetConvOperand(I0Instruction::I0Operand op)
                 case ConvSingle:
                     return std::string(buf) + ":fs";
                 default:
+                    std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                     abort();
             }
 
@@ -620,6 +643,7 @@ std::string I0Instruction::GetOperandAttr(I0Instruction::I0Operand op)
         break;
     default:
         std::cout << "I0Instruction::GetOperandAttr: not supported Attribute" << std::endl;
+        std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
         abort();
         break;
     }
@@ -695,6 +719,7 @@ std::string I0Instruction::GetOperand(I0Instruction::I0Operand op)
 
             return std::string(buf);
         default:
+            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
             abort();
     }
 
@@ -704,6 +729,8 @@ std::string I0Instruction::ToString()
 {
     std::string opstr;
     std::string asp;
+
+    std::string suffix;
 
     if (AddrSizePrefix == EBM) asp = "ebm ";
     if (AddrSizePrefix == SBM) asp = "sbm ";
@@ -768,6 +795,7 @@ std::string I0Instruction::ToString()
                         break;
 
                     default:
+                        std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                         abort();
                 }
 
@@ -836,7 +864,8 @@ std::string I0Instruction::ToString()
                         + ", "
                         + GetOperand(Operands[1])
                         ;
-            default:
+                default:
+                    std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                     abort();
             }
         case SPAWN:
@@ -879,6 +908,7 @@ std::string I0Instruction::ToString()
                 case AbortDelete:
                     return opstr + ":ad";
                 default:
+                    std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
                     abort();
             }
         case INT:
@@ -911,7 +941,35 @@ std::string I0Instruction::ToString()
                 + ", "
                 + GetOperand(Operands[4])
                 ;
+        case EXP:
+            switch(Attribute)
+            {
+                case I0Instruction::Unsigned64:
+                    suffix = "ue";
+                    break;
+                case I0Instruction::Signed64:
+                    suffix = "se";
+                    break;
+                case I0Instruction::Double:
+                    suffix = "fd";
+                    break;
+                case I0Instruction::Single:
+                    suffix = "fs";
+                    break;
+                default:
+                    std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
+                    abort();
+            }
+            return asp +
+                "exp:e," + suffix + "\t"
+                + ", "
+                + GetOperand(Operands[0])
+                + ", "
+                + GetOperand(Operands[1])
+                ;
+            break;
         default:
+            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
             abort();
     }
 }
@@ -1005,7 +1063,13 @@ int64_t I0Instruction::GetLength()
             n += GetOperandEncodingLength(Operands[3]);
             n += GetOperandEncodingLength(Operands[4]);
             break;
+        case EXP:
+            n += 3;
+            n += GetOperandEncodingLength(Operands[0]);
+            n += GetOperandEncodingLength(Operands[1]);
+            break;
         default:
+            std::cerr << "abort @ " << __FILE__ << ":" << __LINE__ << std::endl;
             abort();
     }
     return n;
